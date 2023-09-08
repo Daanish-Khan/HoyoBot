@@ -22,7 +22,7 @@ KSQP4sM0mZvQ1Sr4UcACVcYgYnCbTZMWhJTWkrNXqI8TMomekgny3y+d6NX/cFa6
 
 HEADERS = {
     "x-rpc-app_id": "c9oqaq3s3gu8",
-    "x-rpc-client_type": "4",
+    "x-rpc-client_type": "4", 
     "x-rpc-sdk_version": "2.14.1",
     "x-rpc-game_biz": "bbs_oversea",
     "x-rpc-source": "v2.webLogin",
@@ -63,5 +63,7 @@ def encrypt_geetest_password(text: str) -> str:
     import rsa
 
     public_key = rsa.PublicKey.load_pkcs1_openssl_pem(LOGIN_KEY_CERT)
+    print(public_key.e)
+    print(public_key.n)
     crypto = rsa.encrypt(text.encode("utf-8"), public_key)
     return base64.b64encode(crypto).decode("utf-8")

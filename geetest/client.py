@@ -34,6 +34,8 @@ class GeetestClient():
             "token_type": 6,
         }
 
+        print(payload)
+
         # we do not want to use the previous cookie manager sessions
 
         async with aiohttp.ClientSession() as session:
@@ -65,7 +67,7 @@ class GeetestClient():
 
 async def main():   
     client = GeetestClient()
-    cookies = await client.login_with_password("email", "password")
+    cookies = await client.login_with_password("dishhsr@gmail.com", "DAANISH!")
     print(cookies)
 
 if __name__ ==  '__main__':
