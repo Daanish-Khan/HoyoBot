@@ -1,6 +1,8 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
+import json
 import aiohttp
+import base64
 
 
 app = Flask(__name__)
@@ -26,4 +28,35 @@ async def mmnt():
             headers=HEADERS,
         )
         data = await r.json()
-        return data, 200
+        if data["retcode"] == -3101:
+            aigis = json.loads(r.headers["x-rpc-aigis"])
+            aigis["data"] = json.loads(aigis["data"])
+            return aigis, 200
+    return {}, 400
+
+@app.route("/login", methods = ['POST'])
+async def login():
+    async with aiohttp.ClientSession() as session:
+        r = await session.post(
+            "https://sg-public-api.hoyolab.com/account/ma-passport/api/webLoginByPassword",
+            json={
+                "account": request.get_json()["account"],
+                "password": request.get_json()["password"],
+                "token_type": request.get_json()["token_type"],
+            },
+            headers={
+                **HEADERS,
+                "x-rpc-aigis": f"{request.get_json()['session_id']};{base64.b64encode(json.dumps(request.get_json()['gt']).encode()).decode()}",
+            }
+        )
+
+        data = await r.json()
+
+        cookies = {cookie.key: cookie.value for cookie in r.cookies.values()}
+    if not data["data"]:
+        return data, 400 
+    
+    if data["data"].get("stoken"):
+        cookies["stoken"] = data["data"]["stoken"]
+    
+    return cookies, 200

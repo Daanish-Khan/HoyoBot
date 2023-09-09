@@ -67,7 +67,7 @@ class GeetestClient():
 
 async def main():   
     client = GeetestClient()
-    cookies = await client.login_with_password("dishhsr@gmail.com", "DAANISH!")
+    cookies = await client.login_with_password("username", "password")
     print(cookies)
 
 if __name__ ==  '__main__':
