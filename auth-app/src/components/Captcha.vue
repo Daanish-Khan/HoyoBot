@@ -7,7 +7,7 @@ defineProps<{ msg: string }>()
 const route = useRoute();
 const router = useRouter();
 
-onMounted(() => {
+onMounted(async () => {
   const plugin = document.createElement('script');
   plugin.setAttribute(
     'src',
@@ -20,7 +20,7 @@ onMounted(() => {
   plugin.async = true;
   document.head.appendChild(plugin);
   
-  console.log(route);
+  getUrlQueryParams();
   create_mmt('username', 'password');
 });
 
