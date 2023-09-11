@@ -16,7 +16,12 @@ export async function create_mmt(account: string, password: string) {
         url: "http://127.0.0.1:5000/mmt",
         data: payload
     }).then(function (response) {
-        initTest(response.data.data, response.data.session_id, account, password)
+        initTest(response.data.data, response.data.session_id, account, password);
+    }).catch(function (error) {
+        if (error.response) {
+            console.log(error.response.data)
+            console.log(error.response.status)
+        }
     })
     
 }
@@ -65,5 +70,8 @@ async function loginWithGeetest(sessionId: number, gt: string, account: string, 
         data: payload
     }).then(function (response) {
        console.log(response)
+    }).catch(function(error) {
+        console.log(error.response.data)
+        console.log(error.response.status)
     })
 }
