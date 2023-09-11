@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import HelloWorld from './components/Captcha.vue'
+import Captcha from './components/Captcha.vue'
 </script>
 
 <template>
   <div>
     <img src="./assets/hsr512.svg" class="logo hsr" alt="HSR logo" />
   </div>
-  <HelloWorld msg="HoyoBot Login" />
+  <Captcha msg="HoyoBot Login" />
 </template>
 
 <style scoped>
