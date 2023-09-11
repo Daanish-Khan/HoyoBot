@@ -1,13 +1,12 @@
 import axios from 'axios';
 import JSEncrypt from 'JSEncrypt';
 
-
 const LOGIN_KEY_CERT = import.meta.env.VITE_PUBLIC_KEY;
 
-export async function create_mmt(account: string, password: string) {
+export async function loadCaptcha(account: {user: string, password: string}) {
     const payload = {
-        "account": await encrypt(account),
-        "password": await encrypt(password),
+        "account": await encrypt(account.user),
+        "password": await encrypt(account.password),
         "token_type": 6
     }
 
@@ -16,13 +15,10 @@ export async function create_mmt(account: string, password: string) {
         url: "http://127.0.0.1:5000/mmt",
         data: payload
     }).then(function (response) {
-        initTest(response.data.data, response.data.session_id, account, password);
+        initTest(response.data.data, response.data.session_id, account.user, account.password);
     }).catch(function (error) {
-        if (error.response) {
-            console.log(error.response.data)
-            console.log(error.response.status)
-        }
-    })
+        console.log(error);
+    });
     
 }
 
@@ -69,9 +65,8 @@ async function loginWithGeetest(sessionId: number, gt: string, account: string, 
         url: "http://127.0.0.1:5000/login",
         data: payload
     }).then(function (response) {
-       console.log(response)
+       console.log(response);
     }).catch(function(error) {
-        console.log(error.response.data)
-        console.log(error.response.status)
-    })
+        console.log(error);        
+    });
 }

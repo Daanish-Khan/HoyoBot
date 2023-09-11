@@ -19,6 +19,10 @@ HEADERS = {
     "Referer": "https://account.hoyolab.com/"
 }
 
+@app.route("/userpass", methods = ['GET'])
+async def userpass():
+    return {"user": "username", "password": "password"}, 200
+
 @app.route("/mmt", methods = ['POST'])
 async def mmnt():
     async with aiohttp.ClientSession() as session:
@@ -32,7 +36,7 @@ async def mmnt():
             aigis = json.loads(r.headers["x-rpc-aigis"])
             aigis["data"] = json.loads(aigis["data"])
             return aigis, 200
-    return {}, 400
+    return data, 400
 
 @app.route("/login", methods = ['POST'])
 async def login():

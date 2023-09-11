@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { create_mmt } from '../helpers/geetest';
+import { loadCaptcha } from '../helpers/geetest';
+import { getUsernamePassword } from '../helpers/dbqueries'
 import { useRoute, useRouter } from 'vue-router';
 
 defineProps<{ msg: string }>()
@@ -20,15 +21,20 @@ onMounted(async () => {
   plugin.async = true;
   document.head.appendChild(plugin);
   
-  getUrlQueryParams();
-  create_mmt('username', 'password');
+  const account = await getUsernamePassword(await getUrlQueryParams());
+  loadCaptcha(account);
 });
 
-const getUrlQueryParams = async () => {    
+async function getUrlQueryParams() {    
   //router is async so we wait for it to be ready
-  await router.isReady()
+  await router.isReady();
   //once its ready we can access the query params
-  console.log(route.query)
+  const sessionId = route.query["sessionid"]?.valueOf();
+  if (typeof sessionId === 'string') {
+    return parseInt(sessionId);
+  }
+
+  return 0;
 };
 
 </script>
