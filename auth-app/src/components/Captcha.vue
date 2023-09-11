@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { create_mmt } from '../helpers/geetest';
+import { useRoute, useRouter } from 'vue-router';
 
 defineProps<{ msg: string }>()
+const route = useRoute();
+const router = useRouter();
 
 onMounted(() => {
   const plugin = document.createElement('script');
@@ -16,8 +19,18 @@ onMounted(() => {
   )
   plugin.async = true;
   document.head.appendChild(plugin);
+  
+  console.log(route);
   create_mmt('username', 'password');
-})
+});
+
+const getUrlQueryParams = async () => {    
+  //router is async so we wait for it to be ready
+  await router.isReady()
+  //once its ready we can access the query params
+  console.log(route.query)
+};
+
 </script>
 
 <template>

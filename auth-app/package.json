@@ -15,7 +15,8 @@
     "js-crypto-key-utils": "^1.0.6",
     "js-crypto-rsa": "^1.0.6",
     "jsencrypt": "^3.3.2",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@types/node-rsa": "^1.1.1",
