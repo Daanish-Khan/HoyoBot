@@ -1,17 +1,7 @@
 import axios from 'axios';
-import JSEncrypt from 'JSEncrypt';
-
-const LOGIN_KEY_CERT = import.meta.env.VITE_PUBLIC_KEY;
-
-async function encrypt(text: string) {
-    const encryptor = new JSEncrypt();
-    encryptor.setPublicKey(LOGIN_KEY_CERT);
-
-    return encryptor.encrypt(text);
-}
 
 // Creates captcha and makes visible to user
-export async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, account: string, password: string) {
+export async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, accountId: string) {
     window.initGeetest({
         gt: data.gt,
         challenge: data.challenge,
@@ -22,22 +12,23 @@ export async function initTest(data: {gt: string, challenge: string, new_captcha
         https: false   
     }, (captcha: any) => {
         captcha.appendTo("hoyoAuth");
-        document.getElementById("hoyoAuth")!.hidden = false;
+        document.getElementById("hoyoAuth")!.removeAttribute("disabled");
         document.getElementById("hoyoAuth")!.onclick = () => {
             return captcha.verify();
         };
         captcha.onSuccess(() => {
-            loginWithGeetest(sessionId, captcha.getValidate(), account, password);
+            loginWithGeetest(sessionId, captcha.getValidate(), accountId);
+            document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
+            document.getElementById("hoyoAuth")!.textContent = "Done!";
         })
     }
     )
 }
 
 // Login with successful geetest challenge
-async function loginWithGeetest(sessionId: number, gt: string, account: string, password: string) {
+async function loginWithGeetest(sessionId: number, gt: string, accountId: string) {
     const payload = {
-        "account": await encrypt(account),
-        "password": await encrypt(password),
+        "account_id": accountId,
         "token_type": 6,
         "session_id": sessionId,
         "gt": gt

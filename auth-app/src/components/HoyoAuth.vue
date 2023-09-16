@@ -20,7 +20,10 @@ onMounted(async () => {
   document.head.appendChild(plugin);
   
   // Get captcha challenge from db
-  const challenge = await getChallenge((await supabase.auth.getUser()).data.user?.id);
+  const userId = (await supabase.auth.getUser()).data.user?.id;
+  const challenge = await getChallenge(userId);
+
+  initTest(challenge.data, challenge.session_id, userId!);
   
 });
 
@@ -28,7 +31,7 @@ onMounted(async () => {
 
 <template>
   <div class="card">
-    <button type="button" id="hoyoAuth">Complete Captcha</button>
+    <button type="button" id="hoyoAuth" disabled=true>Complete Captcha</button>
   </div>
 </template>
 
