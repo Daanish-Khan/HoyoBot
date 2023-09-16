@@ -2,3 +2,4 @@
 /__pycache__
 /geetest/__pycache__
 /backend/__pycache__
+/backend/.env

@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { getChallenge } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
+import { initTest } from '../helpers/geetest';
 
 onMounted(async () => {
 
@@ -19,7 +20,7 @@ onMounted(async () => {
   document.head.appendChild(plugin);
   
   // Get captcha challenge from db
-  const challenge = await getChallenge((await supabase.auth.getUser()).data.user?.user_metadata.provider_id)
+  const challenge = await getChallenge((await supabase.auth.getUser()).data.user?.id);
   
 });
 

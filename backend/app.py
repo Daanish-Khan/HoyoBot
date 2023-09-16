@@ -3,10 +3,15 @@ from flask_cors import CORS, cross_origin
 import json
 import aiohttp
 import base64
-
+from supabase import create_client, Client
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+load_dotenv()
+supabase = create_client(os.getenv('DB_URL'), os.getenv('DB_SECRET'))
 
 HEADERS = {
     "x-rpc-app_id": "c9oqaq3s3gu8",
@@ -23,12 +28,17 @@ HEADERS = {
 async def userpass():
     return {"user": "username", "password": "password"}, 200
 
-@app.route("/mmt", methods = ['POST'])
-async def mmnt():
+@app.route("/challenge", methods = ['GET'])
+async def challenge():
+    response = supabase.table('decrypted_users').select("decrypted_username, decrypted_password").eq('id', request.args.get("accountid")).execute()
     async with aiohttp.ClientSession() as session:
         r = await session.post(
             "https://sg-public-api.hoyolab.com/account/ma-passport/api/webLoginByPassword",
-            json=request.get_json(),
+            json={
+                "account": response.data[0].get("decrypted_username"),
+                "password": response.data[0].get("decrypted_password"),
+                "token_type": 6
+            },
             headers=HEADERS,
         )
         data = await r.json()

@@ -11,7 +11,7 @@ async function encrypt(text: string) {
 }
 
 // Creates captcha and makes visible to user
-async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, account: string, password: string) {
+export async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, account: string, password: string) {
     window.initGeetest({
         gt: data.gt,
         challenge: data.challenge,
