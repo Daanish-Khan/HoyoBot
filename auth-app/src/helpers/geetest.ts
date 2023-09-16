@@ -3,25 +3,6 @@ import JSEncrypt from 'JSEncrypt';
 
 const LOGIN_KEY_CERT = import.meta.env.VITE_PUBLIC_KEY;
 
-export async function loadCaptcha(account: {user: string, password: string}) {
-    const payload = {
-        "account": await encrypt(account.user),
-        "password": await encrypt(account.password),
-        "token_type": 6
-    }
-
-    axios({
-        method: 'post',
-        url: "http://127.0.0.1:5000/mmt",
-        data: payload
-    }).then(function (response) {
-        initTest(response.data.data, response.data.session_id, account.user, account.password);
-    }).catch(function (error) {
-        console.log(error);
-    });
-    
-}
-
 async function encrypt(text: string) {
     const encryptor = new JSEncrypt();
     encryptor.setPublicKey(LOGIN_KEY_CERT);
@@ -29,7 +10,8 @@ async function encrypt(text: string) {
     return encryptor.encrypt(text);
 }
 
-async function initTest(data: {gt: string, challenge: string, new_captcha: string}, session_id: number, account: string, password: string) {
+// Creates captcha and makes visible to user
+async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, account: string, password: string) {
     window.initGeetest({
         gt: data.gt,
         challenge: data.challenge,
@@ -38,19 +20,20 @@ async function initTest(data: {gt: string, challenge: string, new_captcha: strin
         lang: "en",
         product: "bind",
         https: false   
-    }, (captcha) => {
-        captcha.appendTo("login");
-        document.getElementById("login").hidden = false;
-        document.getElementById("login").onclick = () => {
+    }, (captcha: any) => {
+        captcha.appendTo("hoyoAuth");
+        document.getElementById("hoyoAuth")!.hidden = false;
+        document.getElementById("hoyoAuth")!.onclick = () => {
             return captcha.verify();
         };
         captcha.onSuccess(() => {
-            loginWithGeetest(session_id, captcha.getValidate(), account, password);
+            loginWithGeetest(sessionId, captcha.getValidate(), account, password);
         })
     }
     )
 }
 
+// Login with successful geetest challenge
 async function loginWithGeetest(sessionId: number, gt: string, account: string, password: string) {
     const payload = {
         "account": await encrypt(account),

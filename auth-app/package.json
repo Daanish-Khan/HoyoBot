@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@rollup/plugin-inject": "^5.0.3",
+    "@supabase/supabase-js": "^2.33.2",
     "axios": "^1.5.0",
     "byte-base64": "^1.1.0",
     "js-crypto-key-utils": "^1.0.6",

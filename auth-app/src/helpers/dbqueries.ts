@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-export async function getUsernamePassword(sessionId: number): Promise<{user: string, password: string}> {
+export async function getChallenge(account_id: string) {
     axios({
         method: 'get',
-        url: "http://127.0.0.1:5000/userpass",
-        params: {sessionId: sessionId}
+        url: "http://127.0.0.1:5000/challenge",
+        params: {account_id: account_id}
     }).then(function (response) {
-        return response.data;
+        return response;
     }).catch(function (error) {
         console.log(error);
-    })
-
-    return {user: "", password: ""};
+    });
 }
