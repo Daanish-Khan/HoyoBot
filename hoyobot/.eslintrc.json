@@ -16,7 +16,7 @@
     ],
 	"rules": {
 		"arrow-spacing": ["warn", { "before": true, "after": true }],
-		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+		"brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",
 		"comma-style": "error",
@@ -53,6 +53,7 @@
 		"spaced-comment": "error",
 		"yoda": "error",
 		"no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars": ["warn"]
+		"@typescript-eslint/no-unused-vars": ["warn"],
+		"@typescript-eslint/no-var-requires": "off"
 	}
 }

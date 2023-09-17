@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.ts",
-  "type": "module",
   "scripts": {
-    "app": "ts-node-esm main.ts"
   },
   "keywords": [],
   "author": "",
