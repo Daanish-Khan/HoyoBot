@@ -19,9 +19,6 @@ export async function initTest(data: {gt: string, challenge: string, new_captcha
         document.getElementById("hoyoAuth")!.removeAttribute("disabled");
         captcha.onSuccess(async () => {
             loginWithGeetest(sessionId, captcha.getValidate(), accountId);
-            document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
-            document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
-            document.getElementById("hoyoAuth")!.textContent = "Done!";
         })
     }
     )
@@ -43,10 +40,16 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
     }).then(function (response) {
         console.log(response)
         if (response.status == 200) {
+            document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
+            document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
+            document.getElementById("hoyoAuth")!.textContent = "Done!";
             document.getElementById("alertSuccess")!.style.display = "block";
         } 
     }).catch(function(error) {
         console.log(error); 
+        document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
+        document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
+        document.getElementById("hoyoAuth")!.textContent = "Error!";
         document.getElementById("alertError")!.style.display = "block";
     });
 }

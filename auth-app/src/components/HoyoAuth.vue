@@ -4,7 +4,6 @@ import { getChallenge } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
 
-
 const loading = ref(true)
 
 onMounted(async () => {
@@ -56,7 +55,7 @@ onMounted(async () => {
 <style scoped>
 #hoyoAuth {
   margin: 2em;
-  background-color: #7148FF;
+  background-color: #cf2279;
 }
 #alertSuccess {
   display: none;

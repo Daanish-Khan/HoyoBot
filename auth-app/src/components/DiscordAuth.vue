@@ -18,7 +18,7 @@ const handleLogin = async () => {
 
 <template>
   <div class="card">
-    <v-btn variant="tonal" :loading="loading" size="large" sm="6" md="4" @click="handleLogin" id="discordAuth">
+    <v-btn variant="tonal" prepend-icon="custom:discordIcon" :loading="loading" size="large" sm="6" md="4" @click="handleLogin" id="discordAuth">
       Login with Discord
     </v-btn>
   </div>
