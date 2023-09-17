@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getChallenge } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
+
+
+const loading = ref(true)
 
 onMounted(async () => {
 
@@ -24,6 +27,7 @@ onMounted(async () => {
   const challenge = await getChallenge(userId);
 
   initTest(challenge.data, challenge.session_id, userId!);
+  loading.value = false
   
 });
 
@@ -31,12 +35,33 @@ onMounted(async () => {
 
 <template>
   <div class="card">
-    <button type="button" id="hoyoAuth" disabled=true>Complete Captcha</button>
+    <v-btn variant="tonal" :loading="loading" @click="loading = true" disabled size="large" sm="6" md="4" id="hoyoAuth">
+      Complete Captcha
+    </v-btn>
+    <v-alert
+      id="alertSuccess"
+      type="success"
+      title="Success!"
+      text="You have been sucessfully authenticated! You can now close this window."
+    ></v-alert>
+    <v-alert
+      id="alertError"
+      type="error"
+      title="it blew up"
+      text="Something went horribly wrong. Please contact Dish with a screenshot of the console."
+    ></v-alert>
   </div>
 </template>
 
 <style scoped>
 #hoyoAuth {
-  background: #7148FF;
+  margin: 2em;
+  background-color: #7148FF;
+}
+#alertSuccess {
+  display: none;
+}
+#alertError {
+  display: none;
 }
 </style>

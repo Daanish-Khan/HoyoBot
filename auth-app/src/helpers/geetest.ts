@@ -12,12 +12,14 @@ export async function initTest(data: {gt: string, challenge: string, new_captcha
         https: false   
     }, (captcha: any) => {
         captcha.appendTo("hoyoAuth");
-        document.getElementById("hoyoAuth")!.removeAttribute("disabled");
         document.getElementById("hoyoAuth")!.onclick = () => {
             return captcha.verify();
         };
-        captcha.onSuccess(() => {
+        document.getElementById("hoyoAuth")!.classList.remove("v-btn--disabled")
+        document.getElementById("hoyoAuth")!.removeAttribute("disabled");
+        captcha.onSuccess(async () => {
             loginWithGeetest(sessionId, captcha.getValidate(), accountId);
+            document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
             document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
             document.getElementById("hoyoAuth")!.textContent = "Done!";
         })
@@ -39,8 +41,12 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
         url: "http://127.0.0.1:5000/login",
         data: payload
     }).then(function (response) {
-       console.log(response);
+        console.log(response)
+        if (response.status == 200) {
+            document.getElementById("alertSuccess")!.style.display = "block";
+        } 
     }).catch(function(error) {
-        console.log(error);        
+        console.log(error); 
+        document.getElementById("alertError")!.style.display = "block";
     });
 }
