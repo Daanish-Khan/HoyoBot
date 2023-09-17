@@ -2,16 +2,12 @@
 import { supabase } from '../helpers/supabaseClient.ts'
 import { ref } from 'vue';
 
-const props = defineProps<{ serverId: number }>()
 const loading = ref(false)
 
 const handleLogin = async () => {
   loading.value = true
     await supabase.auth.signInWithOAuth({
         provider: 'discord',
-        options: {
-            redirectTo: 'http://localhost:5173/?serverid=' + props.serverId
-        }
     })
 }
 </script>
