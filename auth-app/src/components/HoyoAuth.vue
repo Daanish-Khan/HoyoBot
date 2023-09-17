@@ -34,17 +34,19 @@ onMounted(async () => {
 
 <template>
   <div class="card">
-    <v-btn variant="tonal" :loading="loading" @click="loading = true" disabled size="large" sm="6" md="4" id="hoyoAuth">
+    <v-btn variant="tonal" disabled size="large" sm="6" md="4" id="hoyoAuth" :loading="loading" @click="loading = true">
       Complete Captcha
     </v-btn>
     <v-alert
-      id="alertSuccess"
+      class="alertSuccess"
+      id="success"
       type="success"
       title="Success!"
       text="You have been sucessfully authenticated! You can now close this window."
     ></v-alert>
     <v-alert
-      id="alertError"
+      class="alertError"
+      id="error"
       type="error"
       title="it blew up"
       text="Something went horribly wrong. Please contact Dish with a screenshot of the console."
@@ -54,13 +56,12 @@ onMounted(async () => {
 
 <style scoped>
 #hoyoAuth {
-  margin: 2em;
   background-color: #cf2279;
 }
-#alertSuccess {
+.alertSuccess {
   display: none;
 }
-#alertError {
+.alertError {
   display: none;
 }
 </style>

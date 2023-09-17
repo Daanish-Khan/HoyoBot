@@ -36,6 +36,10 @@ h1 {
   line-height: 1.0;
 }
 
+.v-btn {
+  margin: 2em;
+}
+
 .card {
   padding: 2em;
 }

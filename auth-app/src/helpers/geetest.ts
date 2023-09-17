@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // Creates captcha and makes visible to user
 export async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, accountId: string) {
     window.initGeetest({
@@ -35,7 +37,7 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
 
     axios({
         method: 'post',
-        url: "http://127.0.0.1:5000/login",
+        url: API_URL + "login",
         data: payload
     }).then(function (response) {
         console.log(response)
@@ -43,13 +45,13 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
             document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
             document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
             document.getElementById("hoyoAuth")!.textContent = "Done!";
-            document.getElementById("alertSuccess")!.style.display = "block";
+            document.getElementById("success")!.style.display = "block";
         } 
     }).catch(function(error) {
         console.log(error); 
         document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
         document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
         document.getElementById("hoyoAuth")!.textContent = "Error!";
-        document.getElementById("alertError")!.style.display = "block";
+        document.getElementById("error")!.style.display = "block";
     });
 }

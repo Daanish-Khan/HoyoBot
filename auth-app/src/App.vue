@@ -18,7 +18,7 @@ onMounted(async() => {
 
 <template>
   <div>
-    <img src="./assets/hsr512.svg" class="logo hsr" alt="HSR logo" />
+    <img src="./assets/hsr512.svg" class="logo" alt="HSR logo" />
   </div>
   <h1>HoyoBot Login</h1>
   <DiscordAuth v-if="!isUserLoggedIn" />
@@ -31,7 +31,7 @@ onMounted(async() => {
   will-change: filter;
   transition: filter 300ms;
 }
-.logo.hsr:hover {
+.logo:hover {
   filter: drop-shadow(0 0 2em #5020c2aa);
 }
 </style>

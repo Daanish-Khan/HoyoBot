@@ -1,4 +1,5 @@
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getChallenge(account_id: string | undefined): Promise<any> {
 
@@ -6,7 +7,7 @@ export async function getChallenge(account_id: string | undefined): Promise<any>
     
     return axios({
         method: 'get',
-        url: "http://127.0.0.1:5000/challenge",
+        url: API_URL + "challenge",
         params: {accountid: account_id}
     }).then((response) => {
         return response.data;
