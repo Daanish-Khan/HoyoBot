@@ -2,15 +2,27 @@
   "name": "hoyobot",
   "version": "1.0.0",
   "description": "",
-  "main": "test.js",
+  "main": "main.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "app": "ts-node-esm main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
     "vuetify": "^3.3.16"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "eslint-config-standard-with-typescript": "^39.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript": "^5.2.2"
   }
 }
