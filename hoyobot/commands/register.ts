@@ -51,7 +51,7 @@ const command : SlashCommand = {
 			.insert({ discord_id: interaction.member.user.id, server_id: interaction.guildId, username: encrypt(email), password: encrypt(password) });
 
 		if (error != null) {
-			console.log('USERT_INSERT_ERROR: ' + error);
+			console.log('UPSERT_INSERT_ERROR: ' + error);
 			interaction.reply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_INSERT', ephemeral: true });
 			return;
 		}
