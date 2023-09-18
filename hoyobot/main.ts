@@ -16,11 +16,10 @@ const commandsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'co
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts'));
 
 for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath).default;
-	if ('command' in command) {
-		client.slashCommands.set((command as SlashCommand).command.name, (command as SlashCommand));
-		client.slashCommands.set(command.command.name, command);
+	const filePath = './commands/' + file;
+	const command = await import(filePath);
+	if ('command' in command.default) {
+		client.slashCommands.set((command.default as SlashCommand).command.name, (command.default as SlashCommand));
 	}
 }
 

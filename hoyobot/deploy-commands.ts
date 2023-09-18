@@ -14,10 +14,10 @@ const commandsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'co
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts'));
 
 for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath).default;
-	if ('command' in command) {
-		commands.push((command as SlashCommand).command.toJSON());
+	const filePath = './commands/' + file;
+	const command = await import(filePath);
+	if ('command' in command.default) {
+		commands.push((command.default as SlashCommand).command.toJSON());
 	}
 }
 
@@ -27,7 +27,7 @@ const rest = new REST().setToken(process.env.BOT_SECRET);
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-		const data = await rest.put(
+		await rest.put(
 			Routes.applicationGuildCommands(process.env.DEV_CLIENT_ID, process.env.DEV_GUILD_ID),
 			{ body: commands },
 		);
