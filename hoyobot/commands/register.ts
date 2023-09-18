@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../types';
 import { supabase } from '../helpers/supabase.ts';
+import JSEncrypt from 'jsencrypt';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -26,15 +27,40 @@ const command : SlashCommand = {
 			return;
 		}
 
-		const { data, error } = await supabase
+		// Upserting/Updating here messes with supabase encryption.
+		const { count } = await supabase
 			.from('users')
-			.upsert({ discord_id: interaction.member.user.id, server_id: interaction.guildId, username: encrypt(email), password: encrypt(password) });
-		console.log(data);
-		interaction.reply({ content: 'test', ephemeral: true });
+			.select('*', { count: 'exact', head: true })
+			.eq('discord_id', interaction.member.user.id);
+
+		if (count > 0) {
+			const { error } = await supabase
+				.from('users')
+				.delete()
+				.eq('discord_id', interaction.member.user.id);
+
+			if (error != null) {
+				console.log('USERT_DELETE_ERROR: ' + error);
+				interaction.reply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_DELETE', ephemeral: true });
+				return;
+			}
+		}
+
+		const { error } = await supabase
+			.from('users')
+			.insert({ discord_id: interaction.member.user.id, server_id: interaction.guildId, username: encrypt(email), password: encrypt(password) });
+
+		if (error != null) {
+			console.log('USERT_INSERT_ERROR: ' + error);
+			interaction.reply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_INSERT', ephemeral: true });
+			return;
+		}
+
+		interaction.reply({ content: 'Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL, ephemeral: true });
 	},
 };
 
-const validateEmail = (email) => {
+const validateEmail = (email: string) => {
 	return String(email)
 		.toLowerCase()
 		.match(
@@ -42,9 +68,11 @@ const validateEmail = (email) => {
 		);
 };
 
-// TODO
 function encrypt(text: string) {
-	return text;
+	const encryptor = new JSEncrypt();
+	encryptor.setPublicKey(process.env.HYV_PUBLIC_KEY);
+
+	return encryptor.encrypt(text);
 }
 
 export default command;

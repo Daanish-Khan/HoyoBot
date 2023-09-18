@@ -5,7 +5,7 @@ import path from 'path';
 import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
 
-dotenv.config({ path: '.env.secrets' });
+dotenv.config();
 
 const commands = [];
 
