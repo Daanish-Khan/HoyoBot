@@ -84,7 +84,7 @@ async def login():
         cookies['stoken'] = data['data']['stoken']
 
     supabase.table('tokens').upsert({
-        "id": response.data[0].get('discord_id'),
+        "discord_id": response.data[0].get('discord_id'),
         **cookies
     }).execute()
 
