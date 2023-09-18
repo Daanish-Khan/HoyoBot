@@ -5,6 +5,7 @@ import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
 
 const loading = ref(true)
+const errorText = ref("Something went horribly wrong. Please contact Dish with a screenshot of the console.")
 
 onMounted(async () => {
 
@@ -27,7 +28,7 @@ onMounted(async () => {
   const result = await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
   console.log(result)
   // Get captcha challenge from db
-  const challenge = await getChallenge(userId);
+  const challenge = await getChallenge(userId, errorText);
 
   initTest(challenge.data, challenge.session_id, userId!);
   loading.value = false
@@ -53,7 +54,7 @@ onMounted(async () => {
       id="error"
       type="error"
       title="it blew up"
-      text="Something went horribly wrong. Please contact Dish with a screenshot of the console."
+      :text=errorText
     ></v-alert>
   </div>
 </template>

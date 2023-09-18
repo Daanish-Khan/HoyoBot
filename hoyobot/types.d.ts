@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 
 export interface SlashCommand {
-    command: SlashCommandBuilder,
+    command: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
     execute: (interaction : ChatInputCommandInteraction) => void,
     autocomplete?: (interaction: AutocompleteInteraction) => void,
     cooldown?: number // in seconds

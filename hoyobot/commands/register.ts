@@ -13,7 +13,7 @@ const command : SlashCommand = {
 		)
 		.addStringOption(option =>
 			option.setName('password')
-				.setDescription('HSR Account Password (don\'t worry, this will be encrypted then deleted after registration is completed)')
+				.setDescription('HSR Account Password (will be encrypted then deleted after registration)')
 				.setRequired(true),
 		),
 	execute: async (interaction) => {
@@ -28,10 +28,9 @@ const command : SlashCommand = {
 
 		const { data, error } = await supabase
 			.from('users')
-			.select()
-			.limit(1)
-			.single();
-		interaction.reply({ content: JSON.stringify(data), ephemeral: true });
+			.upsert({ discord_id: interaction.member.user.id, server_id: interaction.guildId, username: encrypt(email), password: encrypt(password) });
+		console.log(data);
+		interaction.reply({ content: 'test', ephemeral: true });
 	},
 };
 
@@ -42,5 +41,10 @@ const validateEmail = (email) => {
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 		);
 };
+
+// TODO
+function encrypt(text: string) {
+	return text;
+}
 
 export default command;
