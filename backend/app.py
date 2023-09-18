@@ -24,10 +24,6 @@ HEADERS = {
     'Referer': 'https://account.hoyolab.com/'
 }
 
-@app.route('/userpass', methods = ['GET'])
-async def userpass():
-    return {'user': 'username', 'password': 'password'}, 200
-
 @app.route('/challenge', methods = ['GET'])
 async def challenge():
     response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password').eq('id', request.args.get('accountid')).execute()
@@ -87,5 +83,10 @@ async def login():
         "discord_id": response.data[0].get('discord_id'),
         **cookies
     }).execute()
+
+    supabase.table('users').update({
+        "username": None,
+        "password": None
+    }).eq('id', request.get_json()['account_id']).execute()
 
     return {}, 200
