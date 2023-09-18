@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
+import * as cron from 'node-cron';
+import { checkIn } from './helpers/checkin.ts';
 
 dotenv.config();
 
@@ -48,6 +50,13 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
+	// 5 1 * * * - 1:05AM EST cronjob since resets are based on CST (UTC+8)
+
+	checkIn(client);
+
+	// cron.schedule('5 1 * * *', () => {
+	// 	checkIn(client);
+	// });
 });
 
 client.login(process.env.BOT_SECRET);

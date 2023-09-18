@@ -1,5 +1,19 @@
 import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 
+export interface Token {
+	discord_id: string,
+	account_id_v2: string,
+	account_mid_v2: string,
+	cookie_token_v2: string,
+	ltoken_v2: string,
+	ltuid_v2: string
+}
+
+export interface ApprovedChannel {
+	channel_id: string,
+	server_id: string
+}
+
 export interface SlashCommand {
     command: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
     execute: (interaction : ChatInputCommandInteraction) => void,
