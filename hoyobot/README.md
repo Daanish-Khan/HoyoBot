@@ -30,6 +30,43 @@ KSQP4sM0mZvQ1Sr4UcACVcYgYnCbTZMWhJTWkrNXqI8TMomekgny3y+d6NX/cFa6\n
 
 -----END PUBLIC KEY-----' 
 ```
+## SQL Definitions (Use these schemas to create Supabase tables)
+```
+create table
+  public.users (
+    id uuid null,
+    server_id text not null,
+    discord_id text not null,
+    username text null,
+    password text null,
+    constraint users_pkey primary key (discord_id),
+    constraint users_discord_id_key unique (discord_id),
+    constraint users_id_key unique (id),
+    constraint users_id_fkey foreign key (id) references auth.users (id) on delete cascade
+  ) tablespace pg_default;
 
+create trigger users_encrypt_secret_trigger_password before insert
+or
+update of password on users for each row
+execute function users_encrypt_secret_password ();
+
+create trigger users_encrypt_secret_trigger_username before insert
+or
+update of username on users for each row
+execute function users_encrypt_secret_username ();
+
+create table
+  public.tokens (
+    discord_id text not null,
+    account_id_v2 text not null,
+    account_mid_v2 text null,
+    cookie_token_v2 text null,
+    ltmid_v2 text null,
+    ltoken_v2 text null,
+    ltuid_v2 text null,
+    constraint tokens_pkey primary key (discord_id),
+    constraint tokens_discord_id_fkey foreign key (discord_id) references users (discord_id) on delete cascade
+  ) tablespace pg_default;
+```
 ## Start bot
 Use `npm start`
