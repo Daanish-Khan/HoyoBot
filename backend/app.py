@@ -48,6 +48,14 @@ async def challenge():
             return aigis, 200
     return data, 400
 
+@app.route('/discordauth', methods = ['POST'])
+async def discordauth():
+	response = supabase.table('users').update({
+        "id": request.get_json()['authid']
+	}).eq("discord_id", request.get_json()['discordid']).execute()
+    
+	return {}, 200
+
 @app.route('/login', methods = ['POST'])
 async def login():
     response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password, discord_id').eq('id', request.get_json()['account_id']).execute()
@@ -74,7 +82,6 @@ async def login():
     
     if data['data'].get('stoken'):
         cookies['stoken'] = data['data']['stoken']
-
 
     supabase.table('tokens').upsert({
         "id": response.data[0].get('discord_id'),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getChallenge } from '../helpers/dbqueries'
+import { getChallenge, updateUser } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
 
@@ -20,9 +20,13 @@ onMounted(async () => {
   )
   plugin.async = true;
   document.head.appendChild(plugin);
-  
-  // Get captcha challenge from db
+
   const userId = (await supabase.auth.getUser()).data.user?.id;
+
+  // Update user in db
+  const result = await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
+  console.log(result)
+  // Get captcha challenge from db
   const challenge = await getChallenge(userId);
 
   initTest(challenge.data, challenge.session_id, userId!);
