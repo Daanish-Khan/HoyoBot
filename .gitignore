@@ -3,5 +3,9 @@ hoyobot/node_modules
 /geetest/__pycache__
 /backend/__pycache__
 /backend/.env
-/hoyobot/.env.secrets
-/hoyobot/.secrets.env
+/hoyobot/.env
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
