@@ -5,7 +5,9 @@ hoyobot/node_modules
 /backend/.env
 /hoyobot/.env
 
+/auth-app/.env
 .env*
 .flaskenv*
 !.env.project
 !.env.vault
+
