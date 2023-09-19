@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { supabase } from './supabaseClient';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Creates captcha and makes visible to user
 export async function initTest(data: {gt: string, challenge: string, new_captcha: string}, sessionId: number, accountId: string) {
-    window.initGeetest({
+    (window as any).initGeetest({
         gt: data.gt,
         challenge: data.challenge,
         new_captcha: data.new_captcha,
@@ -46,6 +47,8 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
             document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
             document.getElementById("hoyoAuth")!.textContent = "Done!";
             document.getElementById("success")!.style.display = "block";
+
+			supabase.auth.signOut();
         } 
     }).catch(function(error) {
         console.log(error); 

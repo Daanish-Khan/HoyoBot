@@ -7,7 +7,7 @@ const customSvgNameToComponent: any = {
 };
 
 const customSVGs: IconSet = {
-  component: (props: IconProps) => h(customSvgNameToComponent[props.icon]),
+  component: (props: IconProps) => h(customSvgNameToComponent[<string> props.icon]),
 };
 
 export { customSVGs /* aliases */ };
