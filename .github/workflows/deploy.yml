@@ -1,0 +1,32 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "release" ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: 'auth-app'
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        CI: ""
+        cache-dependency-path: 'auth-app/package-lock.json'
+    
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: sudo systemctl restart nginx
