@@ -11,7 +11,6 @@ onMounted(async() => {
   // Check if user is signed in
   const loginData = await supabase.auth.getUser();
   isUserLoggedIn.value = loginData.data.user != null;
-
 });
 
 </script>

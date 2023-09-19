@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && node -r dotenv/config ./node_modules/.bin/vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -13,6 +13,8 @@
     "@supabase/supabase-js": "^2.33.2",
     "axios": "^1.5.0",
     "byte-base64": "^1.1.0",
+    "dotenv": "^16.3.1",
+    "install": "^0.13.0",
     "js-crypto-key-utils": "^1.0.6",
     "js-crypto-rsa": "^1.0.6",
     "jsencrypt": "^3.3.2",

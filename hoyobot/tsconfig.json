@@ -16,5 +16,9 @@
     "jsx": "preserve",
 
   },
-  "include": ["**/*.ts", "**/*.d.ts", "**/*.tsx"]
+  "ts-node": {
+	// Tell ts-node CLI to install the --loader automatically
+	"esm": true
+  },
+  "include": ["**/*.ts", "**/*.d.ts", "**/*.tsx", "./**/*.ts"]
 }
