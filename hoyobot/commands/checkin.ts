@@ -17,6 +17,7 @@ const command : SlashCommand = {
 			.maybeSingle();
 		if (Object.hasOwn(token, 'data')) {
 			await sendCheckInRequest(token.data);
+			interaction.reply({ content: 'Successfully checked in!', ephemeral: true });
 		} else {
 			interaction.reply({ content: 'You are not registered! Please use /register.', ephemeral: true });
 		}
