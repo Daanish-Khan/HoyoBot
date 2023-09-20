@@ -1,12 +1,38 @@
-name: Node.js CI
+name: Deploy
 
 on:
   push:
     branches: [ "release" ]
-
+    
 jobs:
-  build:
+  deploy-backend:
 
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: 'backend'
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Copy folders
+      run: cp -a /home/minecraft/hoyobot/hoyobot/HoyoBot/env /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/backend
+    - name: Start venv
+      run: source /home/minecraft/hoyobot/hoyobot/HoyoBot/env/bin/activate
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Create env file
+      run: |
+        touch .env
+        echo DB_URL='${{ secrets.DB_URL }}' >> .env
+        echo DB_SECRET='${{ secrets.DB_SECRET }}' >> .env
+    - name: Restart service
+      run: sudo systemctl restart hoyobotapi
+
+
+  deploy-frontend:
+    needs: deploy-backend
     runs-on: self-hosted
     defaults:
       run:
@@ -18,7 +44,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -32,3 +58,30 @@ jobs:
     - run: sudo systemctl restart nginx
     env:
       DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
+
+  deploy-discord-bot:
+    needs: deploy-frontend
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: 'hoyobot'
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        CI: ""
+        cache-dependency-path: 'hoyobot/package-lock.json'
+    - name: Copy .env.me
+      run: cp /home/minecraft/hoyobot/hoyobot/HoyoBot/.env.me /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/hoyobot
+    - run: npm ci
+    - run: npx dotenv-vault@latest pull
+    - run: sudo systemctl restart hoyobot

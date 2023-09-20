@@ -13,7 +13,7 @@ onMounted(async () => {
   const plugin = document.createElement('script');
   plugin.setAttribute(
     'src',
-    '/src/utils/gt.js'
+    '/gt.js'
   );
   plugin.setAttribute(
     'type',

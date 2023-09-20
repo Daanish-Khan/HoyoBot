@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && node -r dotenv/config vite build",
+    "build": "vue-tsc && node -r dotenv/config ./node_modules/.bin/vite build",
     "preview": "vite preview"
   },
   "dependencies": {

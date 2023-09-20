@@ -28,7 +28,7 @@ const rest = new REST().setToken(process.env.BOT_SECRET);
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		await rest.put(
-			Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID),
+			Routes.applicationCommands(process.env.CLIENT_ID),
 			{ body: commands },
 		);
 
