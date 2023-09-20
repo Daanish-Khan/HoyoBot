@@ -5,7 +5,7 @@ import path from 'path';
 import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
 import * as cron from 'node-cron';
-import { checkIn } from './helpers/checkin.ts';
+import { checkInAllUsers } from './helpers/checkinallusers.ts';
 
 dotenv.config();
 
@@ -53,7 +53,7 @@ client.once(Events.ClientReady, c => {
 
 	// 5 1 * * * - 1:05AM EST cronjob since resets are based on CST (UTC+8)
 	cron.schedule('5 1 * * *', () => {
-		checkIn(client);
+		checkInAllUsers(client);
 	});
 });
 
