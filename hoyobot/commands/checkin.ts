@@ -10,6 +10,9 @@ const command : SlashCommand = {
 	execute: async (interaction) => {
 		const userId = interaction.member.user.id;
 
+		// Discord only gives 3 seconds to respond, so this prevents it from throwing an error if it takes longer
+		await interaction.deferReply({ ephemeral: true });
+
 		const token = await supabase
 			.from('tokens')
 			.select()
@@ -17,9 +20,9 @@ const command : SlashCommand = {
 			.maybeSingle();
 		if (Object.hasOwn(token, 'data')) {
 			await sendCheckInRequest(token.data);
-			interaction.reply({ content: 'Successfully checked in!', ephemeral: true });
+			interaction.editReply({ content: 'Successfully checked in!' });
 		} else {
-			interaction.reply({ content: 'You are not registered! Please use /register.', ephemeral: true });
+			interaction.editReply({ content: 'You are not registered! Please use /register.' });
 		}
 	},
 };

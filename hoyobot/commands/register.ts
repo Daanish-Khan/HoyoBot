@@ -22,8 +22,10 @@ const command : SlashCommand = {
 		const email = interaction.options.getString('email');
 		const password = interaction.options.getString('password');
 
+		await interaction.deferReply({ ephemeral: true });
+
 		if (!validateEmail(email)) {
-			interaction.reply({ content: 'Your email is invalid! Please try again.', ephemeral: true });
+			interaction.editReply({ content: 'Your email is invalid! Please try again.' });
 			return;
 		}
 
@@ -33,6 +35,7 @@ const command : SlashCommand = {
 			.select('*', { count: 'exact', head: true })
 			.eq('discord_id', interaction.member.user.id);
 
+		// Check to see if user exists already
 		if (count > 0) {
 			const { error } = await supabase
 				.from('users')
@@ -41,22 +44,23 @@ const command : SlashCommand = {
 
 			if (error != null) {
 				console.log('USERT_DELETE_ERROR: ' + error);
-				interaction.reply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_DELETE', ephemeral: true });
+				interaction.editReply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_DELETE' });
 				return;
 			}
 		}
 
+		// Insert user
 		const { error } = await supabase
 			.from('users')
 			.insert({ discord_id: interaction.member.user.id, server_id: interaction.guildId, username: encrypt(email), password: encrypt(password) });
 
 		if (error != null) {
 			console.log('UPSERT_INSERT_ERROR: ' + error);
-			interaction.reply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_INSERT', ephemeral: true });
+			interaction.editReply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_INSERT' });
 			return;
 		}
 
-		interaction.reply({ content: 'Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL, ephemeral: true });
+		interaction.editReply({ content: 'Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL });
 	},
 };
 

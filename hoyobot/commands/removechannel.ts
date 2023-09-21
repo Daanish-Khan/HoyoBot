@@ -8,11 +8,13 @@ const command : SlashCommand = {
 		.setDescription('Removes HoyoBot\'s permission to speak in this channel. MUST BE ADMIN')
 		.setDefaultMemberPermissions(0),
 	execute: async (interaction) => {
+		await interaction.deferReply({ ephemeral: true });
+
 		await supabase
 			.from('approved_channels')
 			.delete()
 			.eq('channel_id', interaction.channelId);
-		interaction.reply({ content: 'Channel has been removed!', ephemeral: true });
+		interaction.editReply({ content: 'Channel has been removed!' });
 	},
 };
 
