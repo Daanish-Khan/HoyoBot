@@ -51,8 +51,8 @@ client.on(Events.InteractionCreate, async interaction => {
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 
-	// 5 1 * * * - 1:05AM EST cronjob since resets are based on CST (UTC+8)
-	cron.schedule('5 1 * * *', () => {
+	// 5 14 * * * - 2:05PM EST cronjob since resets are based on CST (UTC+8) and I hate daylight savings
+	cron.schedule('5 14 * * *', () => {
 		checkInAllUsers(client);
 	});
 });

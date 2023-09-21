@@ -20,7 +20,7 @@ async function checkInAllUsers(client: Client) {
 		const discordChannel = client.channels.cache.get(channel.channel_id);
 
 		if (discordChannel.isTextBased()) {
-			discordChannel.send('Checked in for everyone! If any errors have occured, the bot will DM you. Please follow up with @_dish_ for troubleshooting.');
+			discordChannel.send('Checked in for everyone! If any errors have occured, the bot will DM you. Please follow up with `@_dish_` for troubleshooting.');
 		}
 	});
 
