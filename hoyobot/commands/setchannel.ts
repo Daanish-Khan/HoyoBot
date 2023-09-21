@@ -8,10 +8,11 @@ const command : SlashCommand = {
 		.setDescription('Allows HoyoBot to speak in the same channel this command was sent in. MUST BE ADMIN')
 		.setDefaultMemberPermissions(0),
 	execute: async (interaction) => {
+		await interaction.deferReply({ ephemeral: true });
 		await supabase
 			.from('approved_channels')
 			.insert({ channel_id: interaction.channelId, server_id: interaction.guildId });
-		interaction.reply({ content: 'Channel has been added!', ephemeral: true });
+		interaction.editReply({ content: 'Channel has been added!' });
 	},
 };
 
