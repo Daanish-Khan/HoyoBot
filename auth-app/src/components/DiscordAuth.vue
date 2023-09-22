@@ -8,9 +8,6 @@
     loading.value = true
     await supabase.auth.signInWithOAuth({
         provider: 'discord',
-		options: {
-			redirectTo: 'http://localhost:3000/'
-		}
     })
   }
 </script>
