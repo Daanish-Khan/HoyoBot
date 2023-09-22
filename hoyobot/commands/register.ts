@@ -18,6 +18,7 @@ const command : SlashCommand = {
 				.setRequired(true),
 		),
 	execute: async (interaction) => {
+
 		// No need for sanitization since supabase does it for us :)
 		const email = interaction.options.getString('email');
 		const password = interaction.options.getString('password');
