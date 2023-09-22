@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../types';
 import { supabase } from '../helpers/supabase.ts';
 import JSEncrypt from 'jsencrypt';
+import { errorEmbed, successEmbed } from '../helpers/embeds.ts';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -23,7 +24,12 @@ const command : SlashCommand = {
 		const password = interaction.options.getString('password');
 
 		if (!validateEmail(email)) {
-			interaction.editReply({ content: 'Your email is invalid! Please try again.' });
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setDescription('Your email is invalid! Please try again.'),
+				],
+			});
 			return;
 		}
 
@@ -42,7 +48,13 @@ const command : SlashCommand = {
 
 			if (error != null) {
 				console.log('USERT_DELETE_ERROR: ' + error);
-				interaction.editReply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_DELETE' });
+				interaction.editReply({
+					embeds: [
+						errorEmbed()
+							.setDescription('Something went wrong. Please contact `@_dish_` for support.')
+							.addFields({ name: 'Error Code', value: 'UPSERT_DELETE' }),
+					],
+				});
 				return;
 			}
 		}
@@ -54,11 +66,22 @@ const command : SlashCommand = {
 
 		if (error != null) {
 			console.log('UPSERT_INSERT_ERROR: ' + error);
-			interaction.editReply({ content: 'Something went wrong. Please contact `@_dish_` for support. Error Code: UPSERT_INSERT' });
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setDescription('Something went wrong. Please contact `@_dish_` for support.')
+						.addFields({ name: 'Error Code', value: 'UPSERT_INSERT' }),
+				],
+			});
 			return;
 		}
 
-		interaction.editReply({ content: 'Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL });
+		interaction.editReply({
+			embeds: [
+				successEmbed()
+					.setDescription('Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL),
+			],
+		});
 	},
 };
 

@@ -6,6 +6,7 @@ import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
 import * as cron from 'node-cron';
 import { checkInAllUsers } from './helpers/checkinallusers.ts';
+import { errorEmbed } from './helpers/embeds.ts';
 
 dotenv.config();
 
@@ -44,7 +45,13 @@ client.on(Events.InteractionCreate, async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error('COMMAND EXECUTION FAILED: ' + error + ' TIMESTAMP: ' + new Date().toISOString());
-		await interaction.editReply({ content: 'There was an error while executing this command!' });
+		await interaction.editReply({
+			embeds: [
+				errorEmbed()
+					.setDescription('There was an error while executing this command!')
+					.addFields({ name: 'Error', value: error }),
+			],
+		});
 	}
 });
 

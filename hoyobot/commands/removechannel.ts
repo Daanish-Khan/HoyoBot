@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../types';
 import { supabase } from '../helpers/supabase.ts';
+import { successEmbed } from '../helpers/embeds.ts';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -12,7 +13,12 @@ const command : SlashCommand = {
 			.from('approved_channels')
 			.delete()
 			.eq('channel_id', interaction.channelId);
-		interaction.editReply({ content: 'Channel has been removed!' });
+		interaction.editReply({
+			embeds: [
+				successEmbed()
+					.setDescription('Channel has been removed!'),
+			],
+		});
 	},
 };
 

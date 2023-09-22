@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../types';
 import { supabase } from '../helpers/supabase.ts';
 import { sendCheckInRequest } from '../helpers/checkinuser.ts';
+import { errorEmbed, infoEmbed, successEmbed } from '../helpers/embeds.ts';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -15,11 +16,34 @@ const command : SlashCommand = {
 			.select()
 			.eq('discord_id', userId)
 			.maybeSingle();
+
 		if (Object.hasOwn(token, 'data')) {
-			await sendCheckInRequest(token.data);
-			interaction.editReply({ content: 'Successfully checked in!' });
+			const response = await sendCheckInRequest(token.data);
+			console.log(response);
+
+			if (response.retcode == -5003) {
+				interaction.editReply({
+					embeds: [
+						infoEmbed()
+							.setDescription('You\'ve already checked in today, Trailblazer~'),
+					],
+				});
+			} else {
+				interaction.editReply({
+					embeds: [
+						successEmbed()
+							.setDescription('Successfully checked in!'),
+					],
+				});
+			}
+
 		} else {
-			interaction.editReply({ content: 'You are not registered! Please use /register.' });
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setDescription('You are not registered! Please use `/register.`'),
+				],
+			});
 		}
 	},
 };
