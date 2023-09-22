@@ -9,6 +9,7 @@ const command : SlashCommand = {
 		.setDefaultMemberPermissions(0),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
 		await supabase
 			.from('approved_channels')
 			.insert({ channel_id: interaction.channelId, server_id: interaction.guildId });
