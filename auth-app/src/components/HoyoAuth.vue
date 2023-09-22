@@ -6,6 +6,7 @@ import { initTest } from '../helpers/geetest';
 
 const loading = ref(true)
 const errorText = ref("Something went horribly wrong. Please contact Dish with a screenshot of the console.")
+const successText = ref("You have been sucessfully authenticated! You can now close this window.")
 
 onMounted(async () => {
 
@@ -25,12 +26,12 @@ onMounted(async () => {
   const userId = (await supabase.auth.getUser()).data.user?.id;
 
   // Update user in db
-  const result = await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
-  console.log(result)
+  await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
+
   // Get captcha challenge from db
   const challenge = await getChallenge(userId, errorText);
 
-  initTest(challenge.data, challenge.session_id, userId!);
+  initTest(challenge.data, challenge.session_id, userId!, successText);
   loading.value = false
   
 });
@@ -47,7 +48,7 @@ onMounted(async () => {
       id="success"
       type="success"
       title="Success!"
-      text="You have been sucessfully authenticated! You can now close this window."
+      :text=successText
     ></v-alert>
     <v-alert
       class="alertError"
