@@ -25,6 +25,8 @@ const command : SlashCommand = {
 		const email = interaction.options.getString('email');
 		const password = interaction.options.getString('password');
 
+		await interaction.deferReply({ ephemeral: true });
+
 		if (!validateEmail(email)) {
 			interaction.editReply({ content: 'Your email is invalid! Please try again.' });
 			return;

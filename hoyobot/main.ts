@@ -37,6 +37,8 @@ client.on(Events.InteractionCreate, async interaction => {
 		return;
 	}
 
+	await interaction.deferReply({ ephemeral: true });
+
 	try {
 		await command.execute(interaction);
 	} catch (error) {

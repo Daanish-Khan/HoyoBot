@@ -10,6 +10,9 @@ const command : SlashCommand = {
 	execute: async (interaction) => {
 		const userId = interaction.member.user.id;
 
+		// Discord only gives 3 seconds to respond, so this prevents it from throwing an error if it takes longer
+		await interaction.deferReply({ ephemeral: true });
+
 		const token = await supabase
 			.from('tokens')
 			.select()
