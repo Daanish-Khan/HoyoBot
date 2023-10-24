@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getChallenge, updateUser } from '../helpers/dbqueries'
+import { getChallenge, registeredWithToken, updateUser } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
 
@@ -24,14 +24,26 @@ onMounted(async () => {
   document.head.appendChild(plugin);
 
   const userId = (await supabase.auth.getUser()).data.user?.id;
-
+  const discordId = (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]
   // Update user in db
-  await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
+  await updateUser(userId, discordId);
 
-  // Get captcha challenge from db
-  const challenge = await getChallenge(userId, errorText);
+  const isRegisteredWithToken = await registeredWithToken(discordId);
 
-  initTest(challenge.data, challenge.session_id, userId!, successText);
+  if (!isRegisteredWithToken) {
+	// Get captcha challenge from db
+	const challenge = await getChallenge(userId, errorText);
+
+	initTest(challenge.data, challenge.session_id, userId!, successText);
+  } else {
+	successText.value = "Token registration completed! You may now close this window."
+	document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
+	document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
+	document.getElementById("hoyoAuth")!.textContent = "Done!";
+	document.getElementById("success")!.style.display = "block";
+	supabase.auth.signOut();
+  }
+
   loading.value = false
   
 });

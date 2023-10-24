@@ -102,3 +102,11 @@ async def login():
 	}).eq('id', request.get_json()['account_id']).execute()
 
 	return checkinResponse, 200
+
+@app.route('/registered_with_token', methods = ['GET'])
+async def registered_with_token():
+	response = supabase.table('tokens').select('*').eq('discord_id', request.args.get('discord_id')).execute()
+	if not response.data:
+		return "False", 200
+	else:
+		return str(response.data[0].get('cookie_v1') != None), 200

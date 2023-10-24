@@ -49,7 +49,6 @@ async function loginWithGeetest(sessionId: number, gt: string, accountId: string
 
 			console.log(response.data.retcode)
 			if (response.data.retcode != -5003) {
-				console.log("a")
 				successText.value = 'You have been sucessfully authenticated & have been checked in! You can now close this window.';
 			}
 

@@ -3,6 +3,7 @@ import { supabase } from './supabase.ts';
 import { sendCheckInRequest } from './checkinuser.ts';
 import { ApprovedChannel, Token } from '../types';
 import { successEmbed } from './embeds.ts';
+import { users } from './persistedusers.ts';
 
 async function checkInAllUsers(client: Client) {
 	const approvedChannels = await supabase
@@ -17,6 +18,10 @@ async function checkInAllUsers(client: Client) {
 		await sendCheckInRequest(token);
 	});
 
+	users.forEach(async (token: string) => {
+		await sendCheckInRequest(token);
+	});
+
 	approvedChannels.data.forEach((channel: ApprovedChannel) => {
 		const discordChannel = client.channels.cache.get(channel.channel_id);
 
@@ -25,7 +30,7 @@ async function checkInAllUsers(client: Client) {
 				embeds: [
 					successEmbed()
 						.setTitle('Check In Complete!')
-						.setDescription('Checked in for everyone! If any errors have occured, the bot will DM you. Please follow up with `@_dish_` for troubleshooting.'),
+						.setDescription('Checked in for everyone! Please check your inbox for your rewards~'),
 				],
 			});
 		}
