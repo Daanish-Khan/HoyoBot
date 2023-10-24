@@ -38,3 +38,15 @@ export async function getChallenge(account_id: string | undefined, errorText: Re
     });
 }
 
+export async function registeredWithToken(discord_id: string | undefined): Promise<any> {
+	if (discord_id == undefined) { return null }
+
+	return axios({
+		method: 'get',
+		url: API_URL + "registered_with_token",
+		params: {discord_id: discord_id}
+	}).then((response) => {
+		return response.data === "True";
+	});
+}
+

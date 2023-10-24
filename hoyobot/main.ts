@@ -6,6 +6,7 @@ import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
 import * as cron from 'node-cron';
 import { checkInAllUsers } from './helpers/checkinallusers.ts';
+import { errorEmbed } from './helpers/embeds.ts';
 
 dotenv.config();
 
@@ -30,22 +31,27 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = interaction.client.slashCommands.get(interaction.commandName);
-	console.log('RECEIVED COMMAND: ' + interaction.commandName);
+	console.log('RECEIVED COMMAND: ' + interaction.commandName + ' TIMESTAMP: ' + new Date().toISOString());
 
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
 		return;
 	}
 
+	// Discord only gives 3 seconds to respond, so this prevents it from throwing an error if it takes longer
+	await interaction.deferReply({ ephemeral: true });
+
 	try {
 		await command.execute(interaction);
 	} catch (error) {
-		console.error('COMMAND EXECUTION FAILED: ' + error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.editReply({ content: 'There was an error while executing this command!' });
-		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		}
+		console.error('COMMAND EXECUTION FAILED: ' + error + ' TIMESTAMP: ' + new Date().toISOString());
+		await interaction.editReply({
+			embeds: [
+				errorEmbed()
+					.setDescription('There was an error while executing this command!')
+					.addFields({ name: 'Error', value: error }),
+			],
+		});
 	}
 });
 

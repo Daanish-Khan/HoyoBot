@@ -1,12 +1,13 @@
-import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction, ChatInputCommandInteraction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 
 export interface Token {
-	discord_id: string,
-	account_id_v2: string,
-	account_mid_v2: string,
-	cookie_token_v2: string,
-	ltoken_v2: string,
-	ltuid_v2: string
+	discord_id: string | null,
+	account_id_v2: string | null,
+	account_mid_v2: string | null,
+	cookie_token_v2: string | null,
+	ltoken_v2: string | null,
+	ltuid_v2: string | null,
+	cookie_v1: string | null,
 }
 
 export interface ApprovedChannel {
@@ -15,7 +16,7 @@ export interface ApprovedChannel {
 }
 
 export interface SlashCommand {
-    command: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
+    command: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | SlashCommandSubcommandsOnlyBuilder,
     execute: (interaction : ChatInputCommandInteraction) => void,
     autocomplete?: (interaction: AutocompleteInteraction) => void,
     cooldown?: number // in seconds

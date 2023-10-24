@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getChallenge, updateUser } from '../helpers/dbqueries'
+import { getChallenge, registeredWithToken, updateUser } from '../helpers/dbqueries'
 import { supabase } from '../helpers/supabaseClient.ts'
 import { initTest } from '../helpers/geetest';
 
 const loading = ref(true)
 const errorText = ref("Something went horribly wrong. Please contact Dish with a screenshot of the console.")
+const successText = ref("You have been sucessfully authenticated! You can now close this window.")
 
 onMounted(async () => {
 
@@ -23,14 +24,26 @@ onMounted(async () => {
   document.head.appendChild(plugin);
 
   const userId = (await supabase.auth.getUser()).data.user?.id;
-
+  const discordId = (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]
   // Update user in db
-  const result = await updateUser(userId, (await supabase.auth.getUser()).data.user?.user_metadata["provider_id"]);
-  console.log(result)
-  // Get captcha challenge from db
-  const challenge = await getChallenge(userId, errorText);
+  await updateUser(userId, discordId);
 
-  initTest(challenge.data, challenge.session_id, userId!);
+  const isRegisteredWithToken = await registeredWithToken(discordId);
+
+  if (!isRegisteredWithToken) {
+	// Get captcha challenge from db
+	const challenge = await getChallenge(userId, errorText);
+
+	initTest(challenge.data, challenge.session_id, userId!, successText);
+  } else {
+	successText.value = "Token registration completed! You may now close this window."
+	document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
+	document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
+	document.getElementById("hoyoAuth")!.textContent = "Done!";
+	document.getElementById("success")!.style.display = "block";
+	supabase.auth.signOut();
+  }
+
   loading.value = false
   
 });
@@ -47,7 +60,7 @@ onMounted(async () => {
       id="success"
       type="success"
       title="Success!"
-      text="You have been sucessfully authenticated! You can now close this window."
+      :text=successText
     ></v-alert>
     <v-alert
       class="alertError"

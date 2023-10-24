@@ -6,7 +6,7 @@ const command : SlashCommand = {
 		.setName('ping')
 		.setDescription('Replies with Pong!'),
 	execute: (interaction) => {
-		interaction.reply({ content: 'Pong!', ephemeral: true });
+		interaction.editReply({ content: 'Pong!' });
 	},
 };
 
