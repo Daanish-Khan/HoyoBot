@@ -30,19 +30,31 @@ onMounted(async () => {
 
   const isRegisteredWithToken = await registeredWithToken(discordId);
 
-  if (!isRegisteredWithToken) {
-	// Get captcha challenge from db
-	const challenge = await getChallenge(userId, errorText);
-
-	initTest(challenge.data, challenge.session_id, userId!, successText);
-  } else {
+  function success() {
 	successText.value = "Token registration completed! You may now close this window."
 	document.getElementById("hoyoAuth")!.classList.add("v-btn--disabled");
 	document.getElementById("hoyoAuth")!.setAttribute("disabled", "disabled");
 	document.getElementById("hoyoAuth")!.textContent = "Done!";
 	document.getElementById("success")!.style.display = "block";
 	supabase.auth.signOut();
+	loading.value = false
   }
+
+  if (isRegisteredWithToken) {
+	success()
+	return;
+  }
+
+  // Get captcha challenge from db
+  const challenge = await getChallenge(userId, errorText);
+  console.log(challenge)
+
+  if ("checkin" in challenge) {
+	success()
+	return;
+  }
+
+  initTest(challenge.data, challenge.session_id, userId!, successText);
 
   loading.value = false
   
