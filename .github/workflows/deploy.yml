@@ -44,7 +44,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -54,6 +53,7 @@ jobs:
         cache-dependency-path: 'auth-app/package-lock.json'
     
     - run: npm ci
+    - run: npx dotenv-vault@latest pull production
     - run: npm run build --if-present
     - run: sudo systemctl restart nginx
     env:
@@ -83,5 +83,5 @@ jobs:
     - name: Copy .env.me
       run: cp /home/minecraft/hoyobot/hoyobot/HoyoBot/.env.me /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/hoyobot
     - run: npm ci
-    - run: npx dotenv-vault@latest pull
+    - run: npx dotenv-vault@latest pull production
     - run: sudo systemctl restart hoyobot
