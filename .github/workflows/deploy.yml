@@ -51,7 +51,8 @@ jobs:
         cache: 'npm'
         CI: ""
         cache-dependency-path: 'auth-app/package-lock.json'
-    
+    - name: Copy .env.me
+      run: cp /home/minecraft/hoyobot/hoyobot/HoyoBot/authappenv/.env.me /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/auth-app
     - run: npm ci
     - run: npx dotenv-vault@latest pull production
     - run: npm run build --if-present
@@ -81,7 +82,7 @@ jobs:
         CI: ""
         cache-dependency-path: 'hoyobot/package-lock.json'
     - name: Copy .env.me
-      run: cp /home/minecraft/hoyobot/hoyobot/HoyoBot/.env.me /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/hoyobot
+      run: cp /home/minecraft/hoyobot/hoyobot/HoyoBot/hoyobotenv/.env.me /home/minecraft/hoyobot/hoyobot/HoyoBot/HoyoBot/hoyobot
     - run: npm ci
     - run: npx dotenv-vault@latest pull production
     - run: sudo systemctl restart hoyobot
