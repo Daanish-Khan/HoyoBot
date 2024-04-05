@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../types';
+import { SlashCommand, Token } from '../types';
 import { supabase } from '../helpers/supabase.ts';
 import JSEncrypt from 'jsencrypt';
 import { errorEmbed, infoEmbed, successEmbed } from '../helpers/embeds.ts';
 import { sendCheckInRequest } from '../helpers/checkinuser.ts';
 import { users } from '../helpers/persistedusers.ts';
+
 import { secrets } from '../secrets.ts';
 
 const command : SlashCommand = {
