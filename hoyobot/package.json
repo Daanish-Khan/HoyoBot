@@ -7,8 +7,8 @@
   "scripts": {
     "start-dev": "cross-env ENV=development npx tsx main.ts",
     "start-prod": "cross-env ENV=production npx tsx main.ts",
-    "deploy-commands-dev": "cross-env ENV=development ts-node-esm deploy-commands.ts",
-    "deploy-commands-prod": "cross-env ENV=production ts-node-esm deploy-commands.ts",
+    "deploy-commands-dev": "cross-env ENV=development npx tsx deploy-commands.ts",
+    "deploy-commands-prod": "cross-env ENV=production npx tsx deploy-commands.ts",
     "postinstall": "patch-package"
   },
   "keywords": [],

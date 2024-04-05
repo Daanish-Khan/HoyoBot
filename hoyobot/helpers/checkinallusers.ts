@@ -2,7 +2,7 @@ import { Client } from 'discord.js';
 import { supabase } from './supabase.ts';
 import { sendCheckInRequest } from './checkinuser.ts';
 import { ApprovedChannel, Token } from '../types';
-import { successEmbed } from './embeds.ts';
+import { errorEmbed, successEmbed } from './embeds.ts';
 import { users } from './persistedusers.ts';
 
 async function checkInAllUsers(client: Client) {
@@ -15,25 +15,39 @@ async function checkInAllUsers(client: Client) {
 		.select();
 
 	tokens.data.forEach(async (token: Token) => {
-		await sendCheckInRequest(token);
+		try {
+			await sendCheckInRequest(token);
+		} catch (error) {
+			client.users.send(token.discord_id, {
+				embeds: [
+					errorEmbed()
+						.setTitle('Check In Failed!')
+						.setDescription('Hey! Your check-in failed for some reason. Please DM **_dish_** for help with a screenshot of this message.')
+						.addFields(
+							{ name: 'discordId', value: token.discord_id },
+							{ name: 'error', value: error },
+						),
+				],
+			});
+		}
 	});
 
 	users.forEach(async (token: string) => {
-		await sendCheckInRequest(token);
+		sendCheckInRequest(token);
 	});
 
 	approvedChannels.data.forEach((channel: ApprovedChannel) => {
 		const discordChannel = client.channels.cache.get(channel.channel_id);
+		if (discordChannel === undefined || !discordChannel.isTextBased()) return;
 
-		if (discordChannel.isTextBased()) {
-			discordChannel.send({
-				embeds: [
-					successEmbed()
-						.setTitle('Check In Complete!')
-						.setDescription('Checked in for everyone! Please check your inbox for your rewards~'),
-				],
-			});
-		}
+		discordChannel.send({
+			embeds: [
+				successEmbed()
+					.setTitle('Check In Complete!')
+					.setDescription('Checked in for everyone! Please check your inbox for your rewards~'),
+			],
+		});
+
 	});
 
 }

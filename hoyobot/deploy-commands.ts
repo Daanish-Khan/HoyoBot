@@ -30,7 +30,7 @@ const rest = new REST().setToken(secrets.BOT_SECRET);
 			{ body: commands },
 		);
 
-		console.log(`Sucessfully reloaded ${commands.length} application (/) commands.`);
+		console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
 
 	} catch (error) {
 		console.error(error);
