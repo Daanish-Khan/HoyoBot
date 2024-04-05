@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { SlashCommand, Token } from '../types';
+import { SlashCommand } from '../types';
 import { supabase } from '../helpers/supabase.ts';
 import JSEncrypt from 'jsencrypt';
 import { errorEmbed, infoEmbed, successEmbed } from '../helpers/embeds.ts';
 import { sendCheckInRequest } from '../helpers/checkinuser.ts';
 import { users } from '../helpers/persistedusers.ts';
+import { secrets } from '../secrets.ts';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -50,6 +51,12 @@ const command : SlashCommand = {
 		let password = null;
 
 		if (interaction.options.getSubcommand() === 'help') {
+			interaction.editReply({
+				embeds: [
+					infoEmbed()
+						.setDescription('test'),
+				],
+			});
 			return;
 		}
 
@@ -141,7 +148,7 @@ const command : SlashCommand = {
 		interaction.editReply({
 			embeds: [
 				successEmbed()
-					.setDescription('Registered! Please authenicate yourself at ' + process.env.WEBSITE_URL),
+					.setDescription('Registered! Please authenticate yourself at ' + secrets.WEBSITE_URL),
 			],
 		});
 
@@ -160,7 +167,7 @@ function encrypt(text: string | null) {
 	if (text === null) return null;
 
 	const encryptor = new JSEncrypt();
-	encryptor.setPublicKey(process.env.HYV_PUBLIC_KEY);
+	encryptor.setPublicKey(secrets.HYV_PUBLIC_KEY);
 
 	return encryptor.encrypt(text);
 }

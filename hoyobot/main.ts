@@ -1,5 +1,4 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { SlashCommand } from './types';
@@ -7,8 +6,7 @@ import { fileURLToPath } from 'url';
 import * as cron from 'node-cron';
 import { checkInAllUsers } from './helpers/checkinallusers.ts';
 import { errorEmbed } from './helpers/embeds.ts';
-
-dotenv.config();
+import { secrets } from './secrets.ts';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -64,4 +62,4 @@ client.once(Events.ClientReady, c => {
 	});
 });
 
-client.login(process.env.BOT_SECRET);
+client.login(secrets.BOT_SECRET);

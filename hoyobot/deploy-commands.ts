@@ -1,11 +1,9 @@
 import { REST, Routes } from 'discord.js';
-import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { SlashCommand } from './types';
 import { fileURLToPath } from 'url';
-
-dotenv.config();
+import { secrets } from './secrets';
 
 const commands = [];
 
@@ -21,14 +19,14 @@ for (const file of commandFiles) {
 	}
 }
 
-const rest = new REST().setToken(process.env.BOT_SECRET);
+const rest = new REST().setToken(secrets.BOT_SECRET);
 
 (async () => {
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		await rest.put(
-			Routes.applicationCommands(process.env.CLIENT_ID),
+			Routes.applicationCommands(secrets.CLIENT_ID),
 			{ body: commands },
 		);
 

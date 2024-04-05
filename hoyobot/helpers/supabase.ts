@@ -1,6 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+import { secrets } from '../secrets';
 
-dotenv.config();
-
-export const supabase = createClient(process.env.DB_URL, process.env.DB_SECRET);
+export const supabase = createClient(secrets.DB_URL, secrets.DB_SECRET);

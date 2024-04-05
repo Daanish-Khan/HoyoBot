@@ -14,6 +14,7 @@
     "axios": "^1.5.0",
     "byte-base64": "^1.1.0",
     "dotenv": "^16.3.1",
+    "dotenv-vault": "^1.26.1",
     "install": "^0.13.0",
     "js-crypto-key-utils": "^1.0.6",
     "js-crypto-rsa": "^1.0.6",
