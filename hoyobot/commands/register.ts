@@ -97,7 +97,7 @@ const command : SlashCommand = {
 				interaction.editReply({
 					embeds: [
 						errorEmbed()
-							.setDescription('Something went wrong. Please contact `@_dish_` for support.')
+							.setDescription('Something went wrong. Please contact `_dish_` for support.')
 							.addFields({ name: 'Error Code', value: 'UPSERT_DELETE' }),
 					],
 				});
@@ -115,7 +115,7 @@ const command : SlashCommand = {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went wrong. Please contact `@_dish_` for support.')
+						.setDescription('Something went wrong. Please contact `_dish_` for support.')
 						.addFields({ name: 'Error Code', value: 'UPSERT_INSERT' }),
 				],
 			});
@@ -134,7 +134,7 @@ const command : SlashCommand = {
 					interaction.editReply({
 						embeds: [
 							errorEmbed()
-								.setDescription('Something went wrong. Please contact `@_dish_` for support.')
+								.setDescription('Something went wrong. Please contact `_dish_` for support.')
 								.addFields({ name: 'Error Code', value: 'DIRECT_TOKEN' }),
 						],
 					});
@@ -151,7 +151,7 @@ const command : SlashCommand = {
 		interaction.editReply({
 			embeds: [
 				successEmbed()
-					.setDescription(`Registered! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`redeem all\`!`),
+					.setDescription(`Registered! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`/redeem all\`!`),
 			],
 		});
 
