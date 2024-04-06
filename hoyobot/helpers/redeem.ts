@@ -4,7 +4,7 @@ import { buildTokenString } from './tokenator';
 import { users } from './persistedusers.ts';
 import { supabase } from './supabase.ts';
 import { Client } from 'discord.js';
-import { successEmbed, errorEmbed } from './embeds.ts';
+import { successEmbed, errorEmbed, infoEmbed } from './embeds.ts';
 
 const USER_AGENT = 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Mobile Safari/537.36';
 
@@ -114,6 +114,8 @@ async function redeemAllCodes(token: Token, client: Client) {
 		.select('code')
 		.eq('expired', false);
 
+	const redeemedCodes = [];
+
 	console.log(`REDEEMING CODES FOR ${token.discord_id}`);
 
 	let promise = Promise.resolve();
@@ -132,6 +134,10 @@ async function redeemAllCodes(token: Token, client: Client) {
 							.update({ expired: true })
 							.eq('code', code);
 					}
+
+					if (response.retcode === 0) {
+						redeemedCodes.push(code);
+					}
 				}
 			});
 			return new Promise((resolve) => {
@@ -143,8 +149,13 @@ async function redeemAllCodes(token: Token, client: Client) {
 	promise.then(() => {
 		client.users.send(token.discord_id, {
 			embeds: [
-				successEmbed()
-					.setDescription('Your code redemption has finished! Please check your inbox for your rewards~'),
+				redeemedCodes.length > 0 ?
+					successEmbed()
+						.setDescription('Your code redemption has finished! Please check your inbox for your rewards~')
+						.addFields({ name: 'Reedeemed Codes', value: redeemedCodes.toString() })
+					: infoEmbed()
+						.setTitle('No redeemable codes found!')
+						.setDescription('Pom-Pom tried all the codes they could find, but it looks like you\'ve redeemed them all!'),
 			],
 		}).catch((error) => {
 			console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${error.toString()}`);

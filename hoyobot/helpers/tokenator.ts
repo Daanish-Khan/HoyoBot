@@ -1,15 +1,11 @@
 import { Token } from '../types';
 
 function buildTokenString(token: Token | string) {
+	if (typeof token === 'string') return token;
 
-	if (typeof token !== 'string') {
-		if (token.cookie_v1 != null) {
-			token = token.cookie_v1;
-		} else {
-			token = tokenToString(token);
-		}
-	}
+	if (token.cookie_v1 === null) return tokenToString(token);
 
+	token = token.cookie_v1;
 	return token;
 
 }
