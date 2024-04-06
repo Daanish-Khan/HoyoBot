@@ -9,6 +9,7 @@ const secrets = {
 	HYV_PUBLIC_KEY: process.env.HYV_PUBLIC_KEY,
 	DB_URL: process.env.DB_URL,
 	DB_SECRET: process.env.DB_SECRET,
+	ENV: process.env.ENV,
 };
 
 export { secrets };

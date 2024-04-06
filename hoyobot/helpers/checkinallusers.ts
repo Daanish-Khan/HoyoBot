@@ -8,16 +8,20 @@ import { users } from './persistedusers.ts';
 async function checkInAllUsers(client: Client) {
 	const approvedChannels = await supabase
 		.from('approved_channels')
-		.select();
+		.select()
+		.eq('silent', false);
 
 	const tokens = await supabase
 		.from('tokens')
 		.select();
 
 	tokens.data.forEach(async (token: Token) => {
+		let response = null;
 		try {
-			await sendCheckInRequest(token);
+			response = await sendCheckInRequest(token);
 		} catch (error) {
+			console.log(`${token.discord_id} NEEDS TO RE-AUTHENTICATE!`);
+
 			client.users.send(token.discord_id, {
 				embeds: [
 					errorEmbed()
@@ -25,11 +29,29 @@ async function checkInAllUsers(client: Client) {
 						.setDescription('Hey! Your check-in failed for some reason. Please DM **_dish_** for help with a screenshot of this message.')
 						.addFields(
 							{ name: 'discordId', value: token.discord_id },
-							{ name: 'error', value: error },
+							{ name: 'error', value: error.toString() },
 						),
 				],
+			}).catch((err) => {
+				console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${err.toString()}`);
+			});
+
+		}
+
+		if (response === null) return;
+
+		if (response.retcode === -100) {
+			console.log(`${token.discord_id} NEEDS TO RE-AUTHENTICATE!`);
+			client.users.send(token.discord_id, {
+				embeds: [
+					errorEmbed()
+						.setDescription('Something went wrong during check-in. Please re-register using `/register`.'),
+				],
+			}).catch((error) => {
+				console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${error.toString()}`);
 			});
 		}
+
 	});
 
 	users.forEach(async (token: string) => {

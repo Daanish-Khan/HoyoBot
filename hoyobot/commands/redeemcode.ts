@@ -54,6 +54,7 @@ const command : SlashCommand = {
 		}
 
 		const code = interaction.options.getString('code');
+		console.log(`ATTEMPTING TO REDEEM CODE ${code}`);
 
 		const redemptionCode = await supabase
 			.from('codes')
@@ -68,23 +69,36 @@ const command : SlashCommand = {
 						.setDescription('The code you have entered has already been redeemed!'),
 				],
 			});
+			console.log(`${code} ALREADY REDEEMED`);
 			return;
 		}
 
-		const response = await redeemCode(token.data, code);
-
+		const response = await redeemCode(token.data, code, interaction.client);
 		// Something went wrong during redemption
-		if (response == null) {
+		if (response === null) {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went horribly wrong! Please contact _dish_ for help.'),
+						.setDescription('Something went horribly wrong! Please contact `_dish_` for help.'),
 				],
 			});
+			console.log(`${code} caused it to shit the bed`);
 			return;
 		}
 
 		const retcode = response.retcode;
+
+		// Invalid code
+		if (retcode == -2003) {
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setDescription('The code you have entered is invalid!'),
+				],
+			});
+			console.log(`${code} IS INVALID`);
+			return;
+		}
 
 		// Expired code
 		if (retcode == -2001) {
@@ -94,6 +108,7 @@ const command : SlashCommand = {
 						.setDescription('The code you have entered has expired.'),
 				],
 			});
+			console.log(`${code} IS EXPIRED`);
 			return;
 		}
 
@@ -105,6 +120,8 @@ const command : SlashCommand = {
 						.setDescription('You have attempted to redeem too frequently. Please wait a bit and then try again~'),
 				],
 			});
+			console.log('TOO MANY REQUESTS');
+			return;
 		}
 
 		// General error handling
@@ -112,14 +129,14 @@ const command : SlashCommand = {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went horribly wrong. Please contact _dish_ with a screenshot of this message.')
-						.addFields(
-							{ name: 'message', value: response },
-						),
+						.setDescription('Something went horribly wrong. Please contact `_dish_` with a screenshot of this message.'),
 				],
 			});
+			console.log(`UNKNOWN ERROR - ${response}`);
+			return;
 		}
 
+		// Inserting to DB
 		const dbResponse = await supabase
 			.from('codes')
 			.insert({
@@ -132,14 +149,17 @@ const command : SlashCommand = {
 				embeds: [
 					infoEmbed()
 						.setTitle('Something happened...')
-						.setDescription('Your code was redeemed successfully. However, it did not redeem for everyone else! Please contact _dish_ with a screenshot of this message.')
+						.setDescription('Your code was redeemed successfully. However, it did not redeem for everyone else! Please contact `_dish_` with a screenshot of this message.')
 						.addFields(
 							{ name: 'error', value: dbResponse.error.message },
 						),
 				],
 			});
+			console.log(`ERROR SAVING ${code} to DB - ${dbResponse.error}`);
 			return;
 		}
+
+		console.log(`SAVED ${code} TO DB`);
 
 		let redeemedDesc = 'Successfully redeemed code! Please check your inbox for your rewards~';
 
@@ -154,7 +174,7 @@ const command : SlashCommand = {
 					.setDescription(redeemedDesc),
 			],
 		});
-
+		console.log('SINGLE REDEEM SUCCESSFUL');
 		redeemCodeForAllUsers(code, interaction.client);
 
 	},
