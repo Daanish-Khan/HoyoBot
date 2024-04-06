@@ -21,7 +21,7 @@ const command : SlashCommand = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('all')
-				.setDescription('Redeems every previous code for you!.'),
+				.setDescription('Redeems every previous code for you!'),
 		)
 		.setDMPermission(false),
 	execute: async (interaction) => {
