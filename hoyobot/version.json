@@ -1,0 +1,6 @@
+{
+  "version": "v1.2.0",
+  "updateNotes": {
+    "v1.3.0": "Hi Guys, a new update has appeared! From now on, every major update will come with new update notes to inform users about new changes.\n\n**__NEW COMMANDS__**\n\n`/redeem code` **ADMINS ONLY**: Redeems a code for you and the rest of the userbase!\n\n`/redeem all`: Redeems *all* the available codes for you. This may take a while.\n\n`/silent`: Hate the constant daily check-in and code redeem notifs? Use this command to turn them off! Running `/silent` again will turn them back on."
+  }
+}

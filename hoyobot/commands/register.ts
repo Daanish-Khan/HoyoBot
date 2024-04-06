@@ -149,7 +149,7 @@ const command : SlashCommand = {
 		interaction.editReply({
 			embeds: [
 				successEmbed()
-					.setDescription('Registered! Please authenticate yourself at ' + secrets.WEBSITE_URL),
+					.setDescription(`Registered! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`redeem all\`!`),
 			],
 		});
 
