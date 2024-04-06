@@ -46,7 +46,8 @@ const command : SlashCommand = {
 			subcommand
 				.setName('help')
 				.setDescription('Describes the command.'),
-		),
+		)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		let email = null;
 		let password = null;

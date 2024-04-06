@@ -7,7 +7,8 @@ const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('silent')
 		.setDescription('Toggles those pesky check-in & code redeem messages! MUST BE ADMIN')
-		.setDefaultMemberPermissions(0),
+		.setDefaultMemberPermissions(0)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		const isSilent = (await supabase
 			.from('approved_channels')

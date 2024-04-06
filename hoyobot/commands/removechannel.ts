@@ -7,7 +7,8 @@ const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('removechannel')
 		.setDescription('Removes HoyoBot\'s permission to speak in this channel. MUST BE ADMIN')
-		.setDefaultMemberPermissions(0),
+		.setDefaultMemberPermissions(0)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		await supabase
 			.from('approved_channels')

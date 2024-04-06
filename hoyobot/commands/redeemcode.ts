@@ -22,7 +22,8 @@ const command : SlashCommand = {
 			subcommand
 				.setName('all')
 				.setDescription('Redeems every previous code for you!.'),
-		),
+		)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		const userId = interaction.member.user.id;
 		const token = await supabase

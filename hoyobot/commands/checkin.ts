@@ -7,7 +7,8 @@ import { errorEmbed, infoEmbed, successEmbed } from '../helpers/embeds.ts';
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('checkin')
-		.setDescription('Immediately checks you in. Does not work if you have not persisted your token in db.'),
+		.setDescription('Immediately checks you in. Does not work if you have not persisted your token in db.')
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		const userId = interaction.member.user.id;
 

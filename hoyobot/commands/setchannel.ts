@@ -7,7 +7,8 @@ const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('setchannel')
 		.setDescription('Allows HoyoBot to speak in the same channel this command was sent in. MUST BE ADMIN')
-		.setDefaultMemberPermissions(0),
+		.setDefaultMemberPermissions(0)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		await supabase
 			.from('approved_channels')
