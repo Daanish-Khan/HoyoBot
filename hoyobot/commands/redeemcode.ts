@@ -48,7 +48,7 @@ const command : SlashCommand = {
 				embeds: [
 					infoEmbed()
 						.setTitle('Pom-Pom is processing your request...')
-						.setDescription('Code redemption may take a while. Please wait for a DM for confirmation of rewards!'),
+						.setDescription('Code redemption may take a while. Please wait for a DM for confirmation of rewards! If it takes more than 30 minutes try again or contact `_dish_` for help.'),
 				],
 			});
 			return;
