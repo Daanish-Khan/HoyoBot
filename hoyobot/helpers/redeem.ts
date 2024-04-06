@@ -32,7 +32,7 @@ async function redeemCode(token: Token | string, code: string, client: Client) {
 				client.users.send(token.discord_id, {
 					embeds: [
 						errorEmbed()
-							.setDescription('Something went wrong during code redemption. Please re-register using `/register`.'),
+							.setDescription('Something went wrong during code redemption. Please re-register using `/register` in a server! (NOT IN DMS IT WILL NOT WORK).'),
 					],
 				}).catch((error) => {
 					console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${error.toString()}`);

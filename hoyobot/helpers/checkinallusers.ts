@@ -20,7 +20,7 @@ async function checkInAllUsers(client: Client) {
 		try {
 			response = await sendCheckInRequest(token);
 		} catch (error) {
-			console.log(`${token.discord_id} NEEDS TO RE-AUTHENTICATE!`);
+			console.log(`ERROR OCCURED WHEN TRYING TO CHECK-IN ${token.discord_id} - ${error.stack()}`);
 
 			client.users.send(token.discord_id, {
 				embeds: [
@@ -45,7 +45,7 @@ async function checkInAllUsers(client: Client) {
 			client.users.send(token.discord_id, {
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went wrong during check-in. Please re-register using `/register`.'),
+						.setDescription('Something went wrong during check-in. Please re-register using `/register` in a server! (NOT IN DMS IT WILL NOT WORK).'),
 				],
 			}).catch((error) => {
 				console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${error.toString()}`);

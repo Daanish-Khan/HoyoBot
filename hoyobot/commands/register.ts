@@ -77,6 +77,7 @@ const command : SlashCommand = {
 			}
 		}
 
+		console.log('GETTING EXISTENCE OF USER');
 		// Upserting/Updating here messes with supabase encryption.
 		const { count } = await supabase
 			.from('users')
