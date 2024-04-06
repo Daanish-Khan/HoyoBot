@@ -80,7 +80,10 @@ client.once(Events.ClientReady, async c => {
 	}).then(response => response.data);
 	console.log(`FOUND VERSION ${VERSION}`);
 
-	if (apiVersion === VERSION) return;
+	if (apiVersion === VERSION) {
+		console.log(`Ready! Logged in as ${c.user.tag}`);
+		return;
+	}
 
 	console.log('NEW UPDATE DETECTED');
 
@@ -121,6 +124,8 @@ client.once(Events.ClientReady, async c => {
 			],
 		});
 	});
+
+	console.log(`Ready! Logged in as ${c.user.tag}`);
 
 });
 
