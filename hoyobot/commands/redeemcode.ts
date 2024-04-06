@@ -32,7 +32,7 @@ const command : SlashCommand = {
 			.eq('discord_id', userId)
 			.maybeSingle();
 
-		if (!Object.hasOwn(token, 'data')) {
+		if (token.data === null) {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()

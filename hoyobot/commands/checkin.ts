@@ -18,34 +18,35 @@ const command : SlashCommand = {
 			.eq('discord_id', userId)
 			.maybeSingle();
 
-		if (Object.hasOwn(token, 'data')) {
-			const response = await sendCheckInRequest(token.data);
-			console.log(response);
-
-			if (response.retcode == -5003) {
-				interaction.editReply({
-					embeds: [
-						infoEmbed()
-							.setDescription('You\'ve already checked in today, Trailblazer~'),
-					],
-				});
-			} else {
-				interaction.editReply({
-					embeds: [
-						successEmbed()
-							.setDescription('Successfully checked in!'),
-					],
-				});
-			}
-
-		} else {
+		if (token.data === null) {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
 						.setDescription('You are not registered! Please use `/register.`'),
 				],
 			});
+			return;
 		}
+
+		const response = await sendCheckInRequest(token.data);
+		console.log(response);
+
+		if (response.retcode == -5003) {
+			interaction.editReply({
+				embeds: [
+					infoEmbed()
+						.setDescription('You\'ve already checked in today, Trailblazer~'),
+				],
+			});
+		} else {
+			interaction.editReply({
+				embeds: [
+					successEmbed()
+						.setDescription('Successfully checked in!'),
+				],
+			});
+		}
+
 	},
 };
 

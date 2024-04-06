@@ -20,7 +20,7 @@ async function checkInAllUsers(client: Client) {
 		try {
 			response = await sendCheckInRequest(token);
 		} catch (error) {
-			console.log(`ERROR OCCURED WHEN TRYING TO CHECK-IN ${token.discord_id} - ${error.stack()}`);
+			console.log(`ERROR OCCURRED WHEN TRYING TO CHECK-IN ${token.discord_id} - ${error.stack()}`);
 
 			client.users.send(token.discord_id, {
 				embeds: [
