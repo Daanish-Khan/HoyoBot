@@ -26,7 +26,7 @@ HEADERS = {
 
 @app.route('/challenge', methods = ['GET'])
 async def challenge():
-	response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password').eq('id', request.args.get('accountid')).execute()
+	response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password, discord_id').eq('id', request.args.get('accountid')).execute()
 	async with aiohttp.ClientSession() as session:
 		r = await session.post(
 			'https://sg-public-api.hoyolab.com/account/ma-passport/api/webLoginByPassword',
@@ -39,9 +39,8 @@ async def challenge():
 		)
 		data = await r.json()
 		cookies = {cookie.key: cookie.value for cookie in r.cookies.values()}
-
 		if cookies:
-			_, code = check_in(cookies, response)
+			_, code = await check_in(cookies, account_id=request.args.get('accountid'), discord_id=response.data[0].get('discord_id'))
 			if code == 200:
 				return {"checkin": True}, 200
 
@@ -62,7 +61,8 @@ async def discordauth():
 
 @app.route('/login', methods = ['POST'])
 async def login():
-	response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password, discord_id').eq('id', request.get_json()['account_id']).execute()
+	id = request.get_json()['account_id']
+	response = supabase.table('decrypted_users').select('decrypted_username, decrypted_password, discord_id').eq('id', id).execute()
 	async with aiohttp.ClientSession() as session:
 
 		r = await session.post(
@@ -88,7 +88,7 @@ async def login():
 		if data['data'].get('stoken'):
 			cookies['stoken'] = data['data']['stoken']
 
-		return await check_in(cookies, response)
+		return await check_in(cookies, account_id=id, discord_id=response.data[0].get('discord_id'))
 
 @app.route('/registered_with_token', methods = ['GET'])
 async def registered_with_token():
@@ -98,9 +98,8 @@ async def registered_with_token():
 	else:
 		return str(response.data[0].get('cookie_v1') != None), 200
 	
-async def check_in(cookies, response):
+async def check_in(cookies, account_id, discord_id):
 	checkinResponse = ''
-
 	async with aiohttp.ClientSession() as session:
 		checkin = await session.post(
 				'https://sg-public-api.hoyolab.com/event/luna/os/sign',
@@ -114,13 +113,13 @@ async def check_in(cookies, response):
 		checkinResponse = await checkin.json()
 
 	supabase.table('tokens').upsert({
-		"discord_id": response.data[0].get('discord_id'),
+		"discord_id": discord_id,
 		**cookies
 	}).execute()
 
 	supabase.table('users').update({
 		"username": None,
 		"password": None
-	}).eq('id', request.get_json()['account_id']).execute()
+	}).eq('id', account_id).execute()
 
 	return checkinResponse, 200
