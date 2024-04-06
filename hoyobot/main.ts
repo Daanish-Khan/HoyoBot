@@ -31,6 +31,16 @@ for (const file of commandFiles) {
 // Command router
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
+	if (!interaction.guild) {
+		await interaction.reply({
+			embeds: [
+				errorEmbed()
+					.setDescription('Commands are only useable in a server!');
+			],
+			ephemeral: true,
+		});
+		return;
+	}
 
 	const command = interaction.client.slashCommands.get(interaction.commandName);
 	console.log('RECEIVED COMMAND: ' + interaction.commandName + ' TIMESTAMP: ' + new Date().toISOString());
