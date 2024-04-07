@@ -144,14 +144,17 @@ const command : SlashCommand = {
 				users.push(interaction.options.getString('tokenstring'));
 			}
 
-			const response = await sendCheckInRequest(interaction.options.getString('tokenstring'));
-			console.log(response);
+			const hsrResponse = await sendCheckInRequest(interaction.options.getString('tokenstring'), 'hsr');
+			const genshinResponse = await sendCheckInRequest(interaction.options.getString('tokenstring'), 'genshin');
+
+			console.log(hsrResponse);
+			console.log(genshinResponse);
 		}
 
 		interaction.editReply({
 			embeds: [
 				successEmbed()
-					.setDescription(`Registered! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`/redeem all\`!`),
+					.setDescription(`You have completed Part 1 of registration! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`/redeem all\`! **YOU WILL NOT BE ABLE TO USE THE FUNCTIONS OF THIS BOT IF YOU DO NOT AUTHENTICATE YOURSELF.**`),
 			],
 		});
 

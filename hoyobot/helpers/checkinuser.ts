@@ -1,19 +1,20 @@
 import axios from 'axios';
 import { Token } from '../types';
 import { buildTokenString } from './tokenator';
+import { getGameURLS } from './urls';
 
 const USER_AGENT = 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Mobile Safari/537.36';
 
 async function sendCheckInRequest(token: Token | string, game: string) {
 
 	const strToken = buildTokenString(token);
+	const message = typeof token !== 'string' ? token.discord_id : token;
 
 	if (game === 'hsr') {
-		const message = typeof token !== 'string' ? token.discord_id : token;
 		console.log(`CHECK IN HSR: ${message}`);
 		return axios({
 			method: 'post',
-			url: 'https://sg-public-api.hoyolab.com/event/luna/os/sign',
+			url: getGameURLS(game).CHECK_IN_URL,
 			data: { 'act_id': 'e202303301540311' },
 			headers: { 'Cookie': strToken, 'User-Agent': USER_AGENT },
 		}).then((response) => {
@@ -22,11 +23,10 @@ async function sendCheckInRequest(token: Token | string, game: string) {
 		});
 	}
 
-	const message = typeof token !== 'string' ? token.discord_id : token;
 	console.log(`CHECK IN GENSHIN: ${message}`);
 	return axios({
 		method: 'post',
-		url: 'https://sg-hk4e-api.hoyolab.com/event/sol/sign',
+		url: getGameURLS(game).CHECK_IN_URL,
 		params: {
 			'act_id': 'e202102251931481',
 			'lang': 'en-us',
