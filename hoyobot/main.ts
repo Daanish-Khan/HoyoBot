@@ -12,8 +12,7 @@ import axios from 'axios';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const VERSION = 'v1.3.0';
-const VERSION_FILE_NAME = './version.json';
+const VERSION = 'v2.0.0';
 
 // Command Loading
 client.slashCommands = new Collection();

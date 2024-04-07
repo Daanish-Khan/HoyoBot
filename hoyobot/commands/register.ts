@@ -154,7 +154,7 @@ const command : SlashCommand = {
 		interaction.editReply({
 			embeds: [
 				successEmbed()
-					.setDescription(`You have completed Part 1 of registration! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`/redeem all\`! **YOU WILL NOT BE ABLE TO USE THE FUNCTIONS OF THIS BOT IF YOU DO NOT AUTHENTICATE YOURSELF.**`),
+					.setDescription(`You have completed Part 1 of registration! Please authenticate yourself at ${secrets.WEBSITE_URL}. Once you have registered, run \`/redeem all\`!\n\n**YOU WILL NOT BE ABLE TO USE THE FUNCTIONS OF THIS BOT IF YOU DO NOT AUTHENTICATE YOURSELF.**`),
 			],
 		});
 
