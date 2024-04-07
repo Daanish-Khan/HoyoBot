@@ -67,11 +67,11 @@ client.once(Events.ClientReady, async c => {
 		checkInAllUsers(client);
 	});
 
-	// if (secrets.ENV !== 'production') {
-	// 	console.log('NOT IN PRODUCTION - SKIPPING UPDATE NOTES');
-	// 	console.log(`Ready! Logged in as ${c.user.tag}`);
-	// 	return;
-	// }
+	if (secrets.ENV !== 'production') {
+		console.log('NOT IN PRODUCTION - SKIPPING UPDATE NOTES');
+		console.log(`Ready! Logged in as ${c.user.tag}`);
+		return;
+	}
 
 	console.log('REQUESTING API VERSION');
 	console.log(`MAKING REQUEST TO ${secrets.API_URL}/version`);
