@@ -67,13 +67,14 @@ client.once(Events.ClientReady, async c => {
 		checkInAllUsers(client);
 	});
 
-	if (secrets.ENV !== 'production') {
-		console.log('NOT IN PRODUCTION - SKIPPING UPDATE NOTES');
-		console.log(`Ready! Logged in as ${c.user.tag}`);
-		return;
-	}
+	// if (secrets.ENV !== 'production') {
+	// 	console.log('NOT IN PRODUCTION - SKIPPING UPDATE NOTES');
+	// 	console.log(`Ready! Logged in as ${c.user.tag}`);
+	// 	return;
+	// }
 
 	console.log('REQUESTING API VERSION');
+	console.log(`MAKING REQUEST TO ${secrets.API_URL}/version`);
 	const apiVersion = await axios({
 		method: 'get',
 		url: `${secrets.API_URL}/version`,
@@ -88,6 +89,7 @@ client.once(Events.ClientReady, async c => {
 	console.log('NEW UPDATE DETECTED');
 
 	console.log('UPDATING API VERSION');
+	console.log(`MAKING POST REQUEST TO ${secrets.API_URL}/version WITH NEW VERSION ${VERSION}`);
 	axios({
 		method: 'post',
 		url: `${secrets.API_URL}/version`,
@@ -97,6 +99,7 @@ client.once(Events.ClientReady, async c => {
 	});
 
 	console.log(`GETTING UPDATE NOTES FOR VERSION ${VERSION}`);
+	console.log(`MAKING REQUEST TO ${secrets.API_URL}/update-notes WITH VERSION ${VERSION}`);
 	const updateNotes = (await axios({
 		method: 'get',
 		url: `${secrets.API_URL}/update-notes`,
