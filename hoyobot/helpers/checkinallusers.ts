@@ -16,9 +16,11 @@ async function checkInAllUsers(client: Client) {
 		.select();
 
 	tokens.data.forEach(async (token: Token) => {
-		let response = null;
+		let responseHSR = null;
+		let responseGenshin = null;
 		try {
-			response = await sendCheckInRequest(token);
+			responseHSR = await sendCheckInRequest(token, 'hsr');
+			responseGenshin = await sendCheckInRequest(token, 'genshin');
 		} catch (error) {
 			console.log(`ERROR OCCURRED WHEN TRYING TO CHECK-IN ${token.discord_id} - ${error.stack()}`);
 
@@ -38,9 +40,9 @@ async function checkInAllUsers(client: Client) {
 
 		}
 
-		if (response === null) return;
+		if (responseHSR === null || responseGenshin === null) return;
 
-		if (response.retcode === -100) {
+		if (responseHSR.retcode === -100 || responseGenshin === -100) {
 			console.log(`${token.discord_id} NEEDS TO RE-AUTHENTICATE!`);
 			client.users.send(token.discord_id, {
 				embeds: [
@@ -55,7 +57,8 @@ async function checkInAllUsers(client: Client) {
 	});
 
 	users.forEach(async (token: string) => {
-		sendCheckInRequest(token);
+		sendCheckInRequest(token, 'hsr');
+		sendCheckInRequest(token, 'genshin');
 	});
 
 	approvedChannels.data.forEach((channel: ApprovedChannel) => {

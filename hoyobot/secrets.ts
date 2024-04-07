@@ -10,6 +10,7 @@ const secrets = {
 	DB_URL: process.env.DB_URL,
 	DB_SECRET: process.env.DB_SECRET,
 	ENV: process.env.ENV,
+	API_URL: process.env.API_URL,
 };
 
 export { secrets };

@@ -13,6 +13,10 @@ CORS(app)
 load_dotenv()
 supabase = create_client(os.getenv('DB_URL'), os.getenv('DB_SECRET'))
 
+f = open('./version.json')
+UPDATE_NOTES_JSON = json.load(f)
+f.close()
+
 HEADERS = {
 	'x-rpc-app_id': 'c9oqaq3s3gu8',
 	'x-rpc-client_type': '4',
@@ -123,3 +127,21 @@ async def check_in(cookies, account_id, discord_id):
 	}).eq('id', account_id).execute()
 
 	return checkinResponse, 200
+
+@app.route('/version', methods = ['GET', 'POST'])
+def version():
+	if request.method == 'GET':
+		return UPDATE_NOTES_JSON['version'], 200
+	
+	version = request.get_json()['version']
+
+	print(f'Updating to version {version}')
+	UPDATE_NOTES_JSON['version'] = version
+	with open('./version.json', 'w', encoding='utf-8') as f:
+		json.dump(UPDATE_NOTES_JSON, f, ensure_ascii=False, indent=4)
+	
+	return { "message": "Success" }, 200
+
+@app.route('/update-notes', methods = ['GET'])
+def update_notes():
+	return { "updateNotes": UPDATE_NOTES_JSON['updateNotes'].get(request.args.get('version')) }, 200

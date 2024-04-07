@@ -16,16 +16,26 @@ const command : SlashCommand = {
 					option.setName('code')
 						.setDescription('The code to redeem')
 						.setRequired(true),
+				)
+				.addStringOption(option =>
+					option.setName('game')
+						.setDescription('The game you want to redeem for.')
+						.setRequired(true)
+						.addChoices(
+							{ name: 'Honkai Star Rail', value: 'hsr' },
+							{ name: 'Genshin Impact', value: 'genshin' },
+						),
 				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('all')
-				.setDescription('Redeems every previous code for you!'),
+				.setDescription('Redeems all previous codes for you!'),
 		)
 		.setDMPermission(false),
 	execute: async (interaction) => {
 		const userId = interaction.member.user.id;
+		const game = interaction.options.getString('game');
 		const token = await supabase
 			.from('tokens')
 			.select()
@@ -74,7 +84,7 @@ const command : SlashCommand = {
 			return;
 		}
 
-		const response = await redeemCode(token.data, code, interaction.client);
+		const response = await redeemCode(token.data, code, interaction.client, game);
 		// Something went wrong during redemption
 		if (response === null) {
 			interaction.editReply({
@@ -88,6 +98,20 @@ const command : SlashCommand = {
 		}
 
 		const retcode = response.retcode;
+
+		if (response.retcode === -10002) {
+			console.log(`${token.data.discord_id} DOES NOT HAVE AN ACCOUNT FOR ${game}`);
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setTitle('Account not Found!')
+						.setDescription(`You do not have an account for ${game === 'hsr' ? 'Honkai Star Rail' : 'Genshin Impact' }!`
+							+ ' Please create a character in game first, or try using another account.',
+						),
+				],
+			});
+			return;
+		}
 
 		// Invalid code
 		if (retcode == -2003) {
@@ -114,7 +138,7 @@ const command : SlashCommand = {
 		}
 
 		// Too fast redemption
-		if (retcode == -2016) {
+		if (retcode === -2016) {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
@@ -125,15 +149,28 @@ const command : SlashCommand = {
 			return;
 		}
 
+		// Not high enough level
+		if (retcode === -2011) {
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setTitle('Too low level!')
+						.setDescription('You are too low level to redeem codes! Please keep playing the game~'),
+				],
+			});
+			return;
+		}
+
 		// General error handling
 		if (retcode != 0 && retcode != -2017) {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went horribly wrong. Please contact `_dish_` with a screenshot of this message.'),
+						.setDescription('Something went horribly wrong. Please contact `_dish_` with a screenshot of this message.')
+						.setFields({ name: 'Response', value: response.data }),
 				],
 			});
-			console.log(`UNKNOWN ERROR - ${response}`);
+			console.log(`UNKNOWN ERROR - ${response.data}`);
 			return;
 		}
 
@@ -143,6 +180,7 @@ const command : SlashCommand = {
 			.insert({
 				code: code,
 				expired: false,
+				game: game,
 			});
 
 		if (dbResponse.error != null) {
@@ -156,7 +194,7 @@ const command : SlashCommand = {
 						),
 				],
 			});
-			console.log(`ERROR SAVING ${code} to DB - ${dbResponse.error}`);
+			console.log(`ERROR SAVING ${code} to DB - ${dbResponse.error.message}`);
 			return;
 		}
 
@@ -176,7 +214,7 @@ const command : SlashCommand = {
 			],
 		});
 		console.log('SINGLE REDEEM SUCCESSFUL');
-		redeemCodeForAllUsers(code, interaction.client);
+		redeemCodeForAllUsers(code, interaction.client, game);
 
 	},
 };

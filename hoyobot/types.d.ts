@@ -16,10 +16,11 @@ export interface ApprovedChannel {
 }
 
 export interface SlashCommand {
-    command: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | SlashCommandSubcommandsOnlyBuilder,
+    command: SlashCommandBuilder | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder,
     execute: (interaction : ChatInputCommandInteraction) => void,
     autocomplete?: (interaction: AutocompleteInteraction) => void,
-    cooldown?: number // in seconds
+    // in seconds
+    cooldown?: number
 }
 
 export interface Command {
