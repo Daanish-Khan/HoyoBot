@@ -4,7 +4,7 @@ function defualtEmbed() {
 	return new EmbedBuilder()
 		.setAuthor({ name: 'HoyoBot', iconURL: 'https://i.imgur.com/XHSIt0N.jpeg' })
 		.setTimestamp()
-		.setFooter({ text: 'Support HoyoBot by buying me a coffee! https://www.buymeacoffee.com/dish <3' });
+		.setFooter({ text: 'Support HoyoBot by buying me a coffee! https://www.buymeacoffee.com/dish <3 | Need help? Join the support discord at https://discord.gg/fUZxNQVNKy' });
 }
 
 function errorEmbed() {

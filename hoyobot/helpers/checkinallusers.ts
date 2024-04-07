@@ -28,7 +28,7 @@ async function checkInAllUsers(client: Client) {
 				embeds: [
 					errorEmbed()
 						.setTitle('Check In Failed!')
-						.setDescription('Hey! Your check-in failed for some reason. Please DM **_dish_** for help with a screenshot of this message.')
+						.setDescription('Hey! Your check-in failed for some reason. Please join the support discord for help.')
 						.addFields(
 							{ name: 'discordId', value: token.discord_id },
 							{ name: 'error', value: error.toString() },

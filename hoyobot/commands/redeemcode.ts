@@ -58,7 +58,7 @@ const command : SlashCommand = {
 				embeds: [
 					infoEmbed()
 						.setTitle('Pom-Pom is processing your request...')
-						.setDescription('Code redemption may take a while. Please wait for a DM for confirmation of rewards! If it takes more than 30 minutes try again or contact `_dish_` for help.'),
+						.setDescription('Code redemption may take a while. Please wait for a DM for confirmation of rewards! If it takes more than 30 minutes try again or join the support discord for help.'),
 				],
 			});
 			return;
@@ -90,7 +90,7 @@ const command : SlashCommand = {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went horribly wrong! Please contact `_dish_` for help.'),
+						.setDescription('Something went horribly wrong! Please join the support discord for help.'),
 				],
 			});
 			console.log(`${code} caused it to shit the bed`);
@@ -166,7 +166,7 @@ const command : SlashCommand = {
 			interaction.editReply({
 				embeds: [
 					errorEmbed()
-						.setDescription('Something went horribly wrong. Please contact `_dish_` with a screenshot of this message.')
+						.setDescription('Something went horribly wrong. Please join the support discord for help.')
 						.setFields({ name: 'Response', value: response.data }),
 				],
 			});
@@ -188,7 +188,7 @@ const command : SlashCommand = {
 				embeds: [
 					infoEmbed()
 						.setTitle('Something happened...')
-						.setDescription('Your code was redeemed successfully. However, it did not redeem for everyone else! Please contact `_dish_` with a screenshot of this message.')
+						.setDescription('Your code was redeemed successfully. However, it did not redeem for everyone else! Please join the support discord for help.')
 						.addFields(
 							{ name: 'error', value: dbResponse.error.message },
 						),
