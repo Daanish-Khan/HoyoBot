@@ -67,8 +67,6 @@ client.once(Events.ClientReady, async c => {
 		checkInAllUsers(client);
 	});
 
-	console.log(secrets);
-
 	if (secrets.ENV !== 'production') {
 		console.log('NOT IN PRODUCTION - SKIPPING UPDATE NOTES');
 		console.log(`Ready! Logged in as ${c.user.tag}`);
