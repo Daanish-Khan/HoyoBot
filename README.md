@@ -1,5 +1,5 @@
 # HoyoBot
-A Discord Bot for Honkai Star Rail that performs daily check-ins as well as code redemption for every user registered in the bot.
+A Discord Bot for Honkai Star Rail and Genshin Impact that performs daily check-ins as well as code redemption for every user registered in the bot.
 
 ## Usage
 
@@ -13,7 +13,7 @@ A Discord Bot for Honkai Star Rail that performs daily check-ins as well as code
 
 `/checkin` checks you in for the day (only to be used when the bot messes up or when you first register)
 
-`/redeem code [code]` Redeems code for you and everyone else.
+`/redeem code [code] [game (Honkai Star Rail/Genshin Impact)]` Redeems code for you and everyone else.
 
 `/redeem all` Redeems all codes for yourself.
 
