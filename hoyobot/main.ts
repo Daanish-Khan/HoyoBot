@@ -9,6 +9,7 @@ import { errorEmbed, infoEmbed } from './helpers/embeds.ts';
 import { secrets } from './secrets.ts';
 import { supabase } from './helpers/supabase.ts';
 import axios from 'axios';
+import { ActivityType } from 'discord.js';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -60,6 +61,8 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.once(Events.ClientReady, async c => {
 	console.log('STARTING BOT...');
+
+	c.user.setPresence({ activities: [{ name: '/register', type: ActivityType.Watching }] });
 
 	// 5 14 * * * - 2:05PM EST cronjob since resets are based on CST (UTC+8) and I hate daylight savings
 	console.log('ENABLING CRON');
