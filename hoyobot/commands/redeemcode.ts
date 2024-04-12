@@ -65,7 +65,7 @@ const command : SlashCommand = {
 		}
 
 		const code = interaction.options.getString('code');
-		console.log(`ATTEMPTING TO REDEEM CODE ${code}`);
+		console.log(`ATTEMPTING TO REDEEM CODE ${code} FOR ${interaction.user.globalName}`);
 
 		const redemptionCode = await supabase
 			.from('codes')
@@ -84,7 +84,7 @@ const command : SlashCommand = {
 			return;
 		}
 
-		const response = await redeemCode(token.data, code, interaction.client, game);
+		const response = await redeemCode(token.data, code, interaction.client, game, true);
 		// Something went wrong during redemption
 		if (response === null) {
 			interaction.editReply({
@@ -156,6 +156,16 @@ const command : SlashCommand = {
 					errorEmbed()
 						.setTitle('Too low level!')
 						.setDescription('You are too low level to redeem codes! Please keep playing the game~'),
+				],
+			});
+			return;
+		}
+
+		if (retcode === -100) {
+			interaction.editReply({
+				embeds: [
+					errorEmbed()
+						.setDescription('Something went wrong during code redemption. Please re-register using `/register`.'),
 				],
 			});
 			return;

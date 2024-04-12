@@ -9,7 +9,7 @@ import { HYV_URLS, getGameURLS } from './urls.ts';
 
 const USER_AGENT = 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Mobile Safari/537.36';
 
-async function redeemCode(token: Token | string, code: string, client: Client, game: string) {
+async function redeemCode(token: Token | string, code: string, client: Client, game: string, fromCommand: boolean) {
 	const stringToken = buildTokenString(token);
 
 	let url = HYV_URLS.GAME_REGION_URL;
@@ -30,6 +30,9 @@ async function redeemCode(token: Token | string, code: string, client: Client, g
 		if (isToken(token)) {
 			if (response.retcode === -100) {
 				console.log(`${token.discord_id} NEEDS TO RE-AUTHENTICATE!`);
+
+				if (fromCommand) return { retcode: -100 };
+
 				client.users.send(token.discord_id, {
 					embeds: [
 						errorEmbed()
@@ -90,7 +93,7 @@ async function redeemCodeForAllUsers(code: string, client: Client, game: string)
 	tokens.data.forEach((token: Token) => {
 		tokenPromise = tokenPromise.then(() => {
 			console.log(`REDEEMING FOR ${token.discord_id}`);
-			redeemCode(token, code, client, game);
+			redeemCode(token, code, client, game, false);
 
 			return new Promise((resolve) => {
 				setTimeout(resolve, 5000);
@@ -101,7 +104,7 @@ async function redeemCodeForAllUsers(code: string, client: Client, game: string)
 	users.forEach((token: string) => {
 		userPromise = userPromise.then(() => {
 			console.log(`REDEEMING FOR ${token}`);
-			redeemCode(token, code, client, game);
+			redeemCode(token, code, client, game, false);
 
 			return new Promise((resolve) => {
 				setTimeout(resolve, 5000);
@@ -148,7 +151,7 @@ async function redeemAllCodes(token: Token, client: Client) {
 			code = code.code;
 
 			console.log(`REDEEMING CODE ${code} FOR ${game}`);
-			redeemCode(token, String(code), client, game).then(async (response) => {
+			redeemCode(token, String(code), client, game, false).then(async (response) => {
 				if (response !== null) {
 					if (response.retcode === -2001) {
 						console.log(`${code} EXPIRED - UPDATING IN DB`);
