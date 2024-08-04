@@ -37,7 +37,7 @@ async function checkInAllUsers(client: Client) {
 			}).catch((err) => {
 				console.log(`CANNOT SEND ERROR MESSAGE TO ${token.discord_id} - ${err.toString()}`);
 			});
-
+ 
 		}
 
 		if (responseHSR === null || responseGenshin === null) return;
